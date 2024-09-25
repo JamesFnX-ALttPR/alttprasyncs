@@ -1,0 +1,22 @@
+<?php
+
+require('../includes/functions.php');
+require('../config/settings.php');
+$domain = getRequestURL();
+
+// Create DB connection
+$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+$options = [
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_EMULATE_PREPARES   => false,
+];
+$pdo = new PDO($dsn, $user, $pass, $options);
+
+$pageTitle = 'Home';
+require_once ('../includes/header.php');
+echo '        <div class="asyncMiddle">If you experience any issues with searching asyncs, posting times, creating an account, logging in, or anything else, please reach out to me on the <a target="_blank" href="' . $domain . '/discord">Discord</a>.</div><br />' . PHP_EOL;
+require_once ('../src/inputSearch.php');
+require_once ('../includes/footer.php');
+
+?>

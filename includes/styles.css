@@ -1,0 +1,374 @@
+table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after {
+    content: " \25B4\25BE"
+}
+table.sortable tbody tr:nth-child(2n) td { background: #303030; }
+table.sortable tbody tr:nth-child(2n+1) td { background: #404040; }
+
+@font-face { font-family: "Hylia Serif Beta"; src: local("Hylia Serif Beta"), url("../fonts/HyliaSerifBeta-Regular.otf") format("opentype"); }
+@font-face { font-family: "Return of Ganon"; src: local("Return of Ganon"), url("../fonts/ReturnofGanon.ttf") format("truetype"); }
+
+body {
+    background-color: black;
+}
+tr.swiss, tr.groups {
+    display: none;
+}
+
+a:link {
+    color: goldenrod;
+    text-decoration: none;
+}
+
+a:visited {
+    color: moccasin;
+    text-decoration: none;
+}
+
+a.toplinks:link, a.toplinks:visited {
+    color: goldenrod;
+    text-decoration: none;
+}
+
+h1 {
+    font-family: "Hylia Serif Beta";
+    color: gold;
+    text-align: center;
+    font-size: xxx-large;
+    font-weight: normal;
+}
+
+div.topline {
+    font-family: "Return of Ganon";
+    font-size: xx-large;
+    color: white;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+div.topline a {
+    padding: 20px;
+    font-weight: bold;
+}
+
+div.asyncTopRow {
+    font-family: "Hylia Serif Beta";
+    color: white;
+    font-size: xx-large;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+div.asyncMiddle {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: white;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: x-large;
+}
+
+div.asyncBottom {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: white;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+div.error {
+    color: lightblue;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: x-large;
+    font-weight: bold;
+    text-align: center;
+}
+table.searchResults, table.raceResults {
+    border: 1px solid white;
+    border-radius: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+table.searchRefine, table.userAdmin {
+    background-color: #505050;
+    color: white;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid white;
+    border-radius: 10px;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+table.search, table.submitAsync, table.register, table.createAsync, table.pairings, table.standings, table.input {
+    background-color: #505050;
+    color: white;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid white;
+    border-radius: 10px;
+}
+
+a.fakeButton {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: large;
+    text-decoration: none;
+    background-color: #EEEEEE;
+    color: #333333;
+    padding: 2px 6px 2px 6px;
+    border-top: 1px solid #CCCCCC;
+    border-right: 1px solid #333333;
+    border-bottom: 1px solid #333333;
+    border-left: 1px solid #CCCCCC;
+}
+
+caption {
+    text-align: center;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 12pt;
+    color: white;
+}
+
+th {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    background-color: #303030;
+    color: white;
+}
+
+.tourneyFormLabel {
+    text-align: right;
+    padding-right: 10px;
+    background-color: #505050;
+}
+
+.rightAlign {
+    text-align: right;
+    padding-right: 10px;
+    background-color: #505050;
+}
+
+tr.odd {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    background-color: #404040;
+    color: white;
+}
+
+tr.even {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    background-color: #505050;
+    color: white;
+}
+
+tr.team {
+    font-weight: bold;
+    background-color:  #303080;
+}
+
+tr.new {
+    color: powderblue;
+}
+tr.spoiler {
+    display: none;
+}
+
+label {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: gold;
+    font-weight: normal;
+}
+
+label.passwordLabel {
+    text-decoration: underline;
+}
+
+td {
+    padding-left: 3px;
+    padding-right: 3px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+td.place1 {
+    background-color: gold;
+    color: black;
+    font-weight: bold;
+}
+
+td.place2 {
+    background-color: silver;
+    color: black;
+    font-weight: bold;
+}
+
+td.place3 {
+    background-color: #CD7F32;
+    font-weight: bold;
+}
+
+td.teamRacerName {
+    padding-left: 20px;
+    padding-right: 3px;
+}
+
+td.teamRacerData {
+    padding-left: 10px;
+    padding-right: 3px;
+}
+
+span.comment {
+    font-size: x-small;
+    vertical-align: super;
+    line-height: 0.9;
+    color: goldenrod;
+}
+
+input[type='number'] {
+    width: 40px;
+}
+
+input {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 12pt;
+}
+
+input.CR {
+    width: 60px;
+}
+
+textarea {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 12pt;
+}
+table.accountHome, table.displaySeries, table.tournamentCentral {
+    margin-left: auto;
+    margin-right: auto;
+    border: 0px;
+}
+
+.tcHeader {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: x-large;
+    text-align: center;
+    color: white;
+}
+
+td.accountHomeLinks, .tcLinks {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: x-large;
+    text-align: center;
+}
+
+td.displaySeriesLinks {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: x-large;
+    text-align: center;
+    width: 50%;
+}
+
+td.accountHomeDesc, .displaySeriesDesc, .tcDesc {
+    color: white;
+    text-align: center;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 25px;
+    font-size: medium;
+}
+
+td.submitButton {
+    text-align: center;
+}
+
+input.submitButton {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: large;
+}
+
+.centerAlign {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.footerleft {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    float: left;
+    color: white;
+}
+
+.footerright {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    float: right;
+    color: white;
+}
+
+.italics {
+    font-style: italic;
+}
+.capitalize {
+    text-transform: capitalize;
+}
+
+.selectclass {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.select2-container {
+    min-width: 150px;
+}
+
+.ui-selectmenu-menu .ui-menu.customicons .ui-menu-item-wrapper {
+    padding: 0.3em 0 0.3em 2.25em;
+}
+
+.ui-selectmenu-text, .ui-menu-item {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.ui-selectmenu-menu .ui-menu.customicons .ui-menu-item .ui-icon {
+    height: 24px;
+    width: 24px;
+    top: 0.1em;
+}
+
+.ui-selectmenu-button {
+    padding-top: 0.2em; padding-bottom: 0.2em; padding-left: 0.5em;
+}
+
+.overflow {
+    height: 200px;
+}
+
+.ui-icon.blank { background: url("../img/blank.png") 50% 50% no-repeat; }
+.ui-icon.big_key { background: url("../img/big_key.png") 50% 50% no-repeat; }
+.ui-icon.bombos { background: url("../img/bombos.png") 50% 50% no-repeat; }
+.ui-icon.bombs { background: url("../img/bombs.png") 50% 50% no-repeat; }
+.ui-icon.book { background: url("../img/book.png") 50% 50% no-repeat; }
+.ui-icon.boomerang { background: url("../img/boomerang.png") 50% 50% no-repeat; }
+.ui-icon.boots { background: url("../img/boots.png") 50% 50% no-repeat; }
+.ui-icon.bow { background: url("../img/bow.png") 50% 50% no-repeat; }
+.ui-icon.bugnet { background: url("../img/bugnet.png") 50% 50% no-repeat; }
+.ui-icon.cape { background: url("../img/cape.png") 50% 50% no-repeat; }
+.ui-icon.compass { background: url("../img/compass.png") 50% 50% no-repeat; }
+.ui-icon.empty_bottle { background: url("../img/empty_bottle.png") 50% 50% no-repeat; }
+.ui-icon.ether { background: url("../img/ether.png") 50% 50% no-repeat; }
+.ui-icon.flippers { background: url("../img/flippers.png") 50% 50% no-repeat; }
+.ui-icon.flute { background: url("../img/flute.png") 50% 50% no-repeat; }
+.ui-icon.gloves { background: url("../img/gloves.png") 50% 50% no-repeat; }
+.ui-icon.green_potion { background: url("../img/green_potion.png") 50% 50% no-repeat; }
+.ui-icon.hammer { background: url("../img/hammer.png") 50% 50% no-repeat; }
+.ui-icon.heart { background: url("../img/heart.png") 50% 50% no-repeat; }
+.ui-icon.hookshot { background: url("../img/hookshot.png") 50% 50% no-repeat; }
+.ui-icon.ice_rod { background: url("../img/ice_rod.png") 50% 50% no-repeat; }
+.ui-icon.lamp { background: url("../img/lamp.png") 50% 50% no-repeat; }
+.ui-icon.magic_powder { background: url("../img/magic_powder.png") 50% 50% no-repeat; }
+.ui-icon.map { background: url("../img/map.png") 50% 50% no-repeat; }
+.ui-icon.mirror { background: url("../img/mirror.png") 50% 50% no-repeat; }
+.ui-icon.moon_pearl { background: url("../img/moon_pearl.png") 50% 50% no-repeat; }
+.ui-icon.mushroom { background: url("../img/mushroom.png") 50% 50% no-repeat; }
+.ui-icon.pendant { background: url("../img/pendant.png") 50% 50% no-repeat; }
+.ui-icon.quake { background: url("../img/quake.png") 50% 50% no-repeat; }
+.ui-icon.shield { background: url("../img/shield.png") 50% 50% no-repeat; }
+.ui-icon.shovel { background: url("../img/shovel.png") 50% 50% no-repeat; }
+.ui-icon.somaria { background: url("../img/somaria.png") 50% 50% no-repeat; }
+.ui-icon.tunic { background: url("../img/tunic.png") 50% 50% no-repeat; }

@@ -1,14 +1,15 @@
 <?php
 
-// Variables from form page - email, displayName, (password1), (password2)
+// Variables from form page - email, displayName, searchRange (password1), (password2)
 
 // Get current display name and email for user
-$stmt = $pdo->prepare("SELECT email, displayName FROM asyncusers WHERE id = :id");
+$stmt = $pdo->prepare("SELECT email, displayName, searchRange FROM asyncusers WHERE id = :id");
 $stmt->bindValue(':id', $_SESSION['userid'], PDO::PARAM_INT);
 $stmt->execute();
 $row = $stmt->fetch();
 $currentEmail = $row['email'];
 $currentDisplayName = $row['displayName'];
+$currentOffset = $row['searchRange'];
 $errors = '';
 
 $newEmail = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
@@ -43,6 +44,7 @@ if ($_POST['password2'] != '') {
 }
 
 $newDisplayName = strip_tags($_POST['displayName']);
+$newOffset = $_POST['searchRange'];
 
 //Process errors and update only new information in the database
 if ($errors != '') {
@@ -53,6 +55,12 @@ if ($errors != '') {
     if ($newEmail != $currentEmail) {
         $stmt = $pdo->prepare("UPDATE asyncusers SET email = :email WHERE id = :id");
         $stmt->bindValue(':email', $newEmail, PDO::PARAM_STR);
+        $stmt->bindValue(':id', $_SESSION['userid'], PDO::PARAM_INT);
+        $stmt->execute();
+    }
+    if ($newOffset != $currentOffset) {
+        $stmt = $pdo->prepare("UPDATE asyncusers SET searchRange = :offset WHERE id = :id");
+        $stmt->bindValue(':offset', $newOffset, PDO::PARAM_INT);
         $stmt->bindValue(':id', $_SESSION['userid'], PDO::PARAM_INT);
         $stmt->execute();
     }

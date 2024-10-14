@@ -1,5 +1,15 @@
 <?php
 
+// Check if we're logged in; if so, get the default offset from the database instead of assuming 30 days
+if (isset($_SESSION['userid'])) {
+    $stmt = $pdo->prepare("SELECT searchRange FROM asyncusers WHERE id = :id");
+    $stmt->bindValue(':id', $_SESSION['userid'], PDO::PARAM_INT);
+    $stmt->execute();
+    $offset = $stmt->fetchColumn();
+} else {
+    $offset = 30;
+}
+
 echo '        <form action="' . $domain . '/search" method="post">' . PHP_EOL;
 echo '        <table class="search">' . PHP_EOL;
 echo '            <tr><th><label for="searchBox" title="Mode and names will autocomplete.">Search For:</label></th><th><label for="startDate">From:</label></th><th><label for="endDate"> To:</label></th></tr>' . PHP_EOL;
@@ -14,7 +24,13 @@ foreach($stmt as $row) {
     echo '                    <option value="' . $row['racetimeName'] . '"></option>' . PHP_EOL;
 }
 echo '                </datalist>' . PHP_EOL;
-echo '            </td><td class="centerAlign"><input type="date" id="startDate" name="startDate" min="2022-02-21" max="' . date("Y-m-d") . '" value="' . date("Y-m-d", strtotime('-30 days')) . '" /> </td><td class="centerAlign"><input type="date" id="endDate" name="endDate" min="2022-02-21" max="' . date("Y-m-d") . '" /></td></tr>' . PHP_EOL;
+echo '            </td><td class="centerAlign"><input type="date" id="startDate" name="startDate" min="2022-02-21" max="' . date("Y-m-d") . '"';
+
+if ($offset != 0) {
+    $offsetString = '-' . $offset . ' days';
+    echo ' value="' . date("Y-m-d", strtotime($offsetString)) . '"';
+}
+echo ' /> </td><td class="centerAlign"><input type="date" id="endDate" name="endDate" min="2022-02-21" max="' . date("Y-m-d") . '" /></td></tr>' . PHP_EOL;
 echo '            <tr><th colspan="3"><label for="hash1">OPTIONAL - Search by in-ROM Hash</label></th></tr>' . PHP_EOL;
 echo '            <tr><td colspan="3">' . PHP_EOL;
 echo '                <select id="hash1" name="hash1">' . PHP_EOL;

@@ -1,54 +1,24 @@
 <?php
 
-//Determine if logged in account is an admin or a series maker
-$stmt = $pdo->prepare("SELECT is_admin, is_seriesMaker FROM asyncusers WHERE id = :id");
+//Determine if logged in account is an admin
+$stmt = $pdo->prepare("SELECT is_admin FROM asyncusers WHERE id = :id");
 $stmt->bindValue(':id', $_SESSION['userid'], PDO::PARAM_INT);
 $stmt->execute();
-$row = $stmt->fetch();
-$isAdmin = $row['is_admin'];
-$isSeriesMaker = $row['is_seriesMaker'];
-
-// Find out if there are any series to add races to - if so, we'll add a column and form for that
-if ($isAdmin == 'y') {
-    $stmt = $pdo->prepare("SELECT id FROM series");
-    $stmt->execute();
-    $rslt = $stmt->fetchColumn();
-    if ($rslt) {
-        $seriesColumn = 'y';
-    } else {
-        $seriesColumn = 'n';
-    }
-} elseif ($isSeriesMaker == 'y') {
-    $stmt = $pdo->prepare("SELECT id FROM series WHERE createdBy = :createdBy");
-    $stmt->bindValue(':createdBy', $_SESSION['userid'], PDO::PARAM_INT);
-    $stmt->execute();
-    $rslt = $stmt->fetchColumn();
-    if ($rslt) {
-        $seriesColumn = 'y';
-    } else {
-        $seriesColumn = 'n';
-    }
-} else {
-    $seriesColumn = 'n';
-}
+$isAdmin = $stmt->fetchColumn();
 
 //Display asyncs that the user has created and give options for editing
 $rowCounter = 0;
 echo '        <table class="searchResults sortable">' . PHP_EOL;
-echo '            <caption class="searchResults">Asyncs Created By ' . $_SESSION['displayName'] . '</caption>' . PHP_EOL;
+echo '            <caption class="searchResults">Results Submitted By ' . $_SESSION['displayName'] . '</caption>' . PHP_EOL;
 if ($isAdmin == 'y') { //Admins can edit *all* submitted asyncs
-    $stmt = $pdo->prepare("SELECT * FROM races WHERE raceFromRacetime = 'n'");
+    $stmt = $pdo->prepare("SELECT * FROM results WHERE racerFromRacetime = 'n'");
     $stmt->execute();
 } else {
-    $stmt = $pdo->prepare("SELECT * FROM races WHERE createdBy = :createdBy");
-    $stmt->bindValue(':createdBy', $_SESSION['userid'], PDO::PARAM_INT);
+    $stmt = $pdo->prepare("SELECT * FROM results WHERE enteredBy = :enteredBy");
+    $stmt->bindValue(':enteredBy', $_SESSION['userid'], PDO::PARAM_INT);
     $stmt->execute();
 }
-echo '                <tr><th>Date (UTC)</th><th>Mode</th><th>Description</th><th>Racetime Room</th><th>Seed</th><th>Participants</th><th>View Results</th><th>Edit</th>';
-if ($seriesColumn == 'y') {
-    echo '<th><form method="post" action="' . $domain . '/addtoseries" id="addtoseries"><input type="submit" class="submitButton" form="addtoseries" value="Add to Series" /></form></th>';
-}
-echo '</tr>' . PHP_EOL;
+echo '                <tr><th>Race Room</th><th>Share Async</th><th>Name</th><th>Team</th><th>Real Time</th><th>In-Game Time</th><th><span title="Collection Rate">CR</span></th><th>Comments</th><th>Link to VOD</th><th>Edit</th><th><form method="post" action="' . $domain . '/deleteresult" id="deleteresult"><input type="submit" class="submitButton" form="deleteresult" value="Delete Results" /></form></th></tr>' . PHP_EOL;
 while($row = $stmt->fetch()) {
     $rowCounter++;
     if($rowCounter % 2 == 0) {
@@ -56,52 +26,34 @@ while($row = $stmt->fetch()) {
     } else {
         $startOfRow = '                <tr class="odd">';
     }
-    $raceID = $row['id'];
+    $resultID = $row['id'];
     $raceSlug = $row['raceSlug'];
-    $raceStart = $row['raceStart'];
-    $raceMode = $row['raceMode'];
-    $raceSeed = $row['raceSeed'];
-    $raceHash = $row['raceHash'];
-    $raceDescription = $row['raceDescription'];
-    $raceIsTeam = $row['raceIsTeam'];
-    $raceIsSpoiler = $row['raceIsSpoiler'];
-    $raceSpoilerLink = $row['raceSpoilerLink'];
-    if($raceIsTeam == 'y') {
-        $raceDescription = 'CO-OP/TEAM - ' . $raceDescription;
-        $teamCountSQL = $pdo->prepare("SELECT COUNT(DISTINCT racerTeam) FROM results WHERE raceSlug = :raceSlug");
-        $teamCountSQL->bindValue(':raceSlug', $raceSlug, PDO::PARAM_STR);
-        $teamCountSQL->execute();
-        $participantCount = $teamCountSQL->fetchColumn();
+    $racetimeID = $row['racerRacetimeID'];
+    $racerTeam = $row['racerTeam'];
+    $racerRealTime = $row['racerRealTime'];
+    $racerIGT = $row['racerInGameTime'];
+    $racerCR = $row['racerCheckCount'];
+    $racerComment = $row['racerComment'];
+    $racerForfeit = $row['racerForfeit'];
+    $racerVODLink = $row['racerVODLink'];
+    $enteredBy = $row['enteredBy'];
+    $stmt2 = $pdo->prepare("SELECT racetimeName FROM racerinfo WHERE racetimeID = :racetimeID");
+    $stmt2->bindValue(':racetimeID', $racetimeID, PDO::PARAM_STR);
+    $stmt2->execute();
+    $racerName = $stmt2->fetchColumn();
+    $stmt2 = $pdo->prepare("SELECT id FROM races WHERE raceSlug = :raceSlug");
+    $stmt2->bindValue(':raceSlug', $raceSlug, PDO::PARAM_STR);
+    $stmt2->execute();
+    $raceID = $stmt2->fetchColumn();
+    echo $startOfRow . '<td><a href="' . $domain . '/results/' . $raceID . '">' . $raceSlug . '</a></td><td><a href="' . $domain . '/async/' . $raceID . '">Share Async</a></td><td>' . $racerName . '</td><td>' . $racerTeam . '</td><td>';
+    if ($racerForfeit == 'y') {
+        echo 'FF</td><td>FF</td>';
+    } elseif ($racerForfeit == 'n' && $racerIGT != null) {
+        echo gmdate('G:i:s', $racerRealTime) . '</td><td>' . gmdate('G:i:s', $racerIGT) . '</td>';
     } else {
-        $playerCountSQL = $pdo->prepare("SELECT COUNT(DISTINCT racerRacetimeID) FROM results WHERE raceSlug = :raceSlug");
-        $playerCountSQL->bindValue(':raceSlug', $raceSlug, PDO::PARAM_STR);
-        $playerCountSQL->execute();
-        $participantCount = $playerCountSQL->fetchColumn();
+        echo gmdate('G:i:s', $racerRealTime) . '</td><td>N/A</td>';
     }
-    if($raceIsSpoiler == 'y') {
-        if($raceDescription == '') {
-            $raceDescription = '<a target="_blank" href="' . $raceSpoilerLink . '">Link to Spoiler</a>';
-        } else {
-            $raceDescription = $raceDescription . ' - <a target="_blank" href="' . $raceSpoilerLink . '">Link to Spoiler</a>';
-        }
-    }
-    echo $startOfRow . '<td>' . $raceStart . '</td><td>' . $raceMode . '</td><td>' . $raceDescription . '</td><td>' . $raceSlug . '</td><td><a target="_blank" href="' . $raceSeed . '">Download Seed</a></td><td>' . $participantCount . '</td><td><a href="' . $domain . '/results/' . $raceID . '">View Results</a></td><td><a href="' . $domain . '/editasync/' . $raceID . '">Edit Async</a></td>';
-    if ($seriesColumn == 'y') {
-        echo '<td><select form="addtoseries" id="seed_' . $raceID . '" name="seed_' . $raceID . '"><option value=""></option>';
-        if ($isAdmin == 'y') {
-            $stmt2 = $pdo->prepare("SELECT id, seriesName FROM series");
-        } elseif ($isSeriesMaker == 'y') {
-            $stmt2 = $pdo->prepare("SELECT id, seriesName FROM series WHERE createdBy = :createdBy");
-            $stmt2->bindValue(':createdBy', $_SESSION['userid'], PDO::PARAM_INT);
-        }
-        $stmt2->execute();
-        while ($row2 = $stmt2->fetch()) {
-            echo '<option value="' . $row2['id'] . '">' . $row2['seriesName'] . '</option>';
-        }
-        echo '</select></td>';
-    }
-    echo '</tr>' . PHP_EOL;
+    echo '<td>' . $racerCR . '<td>' . $racerComment . '</td><td>' . $racerVODLink . '</td><td><a href="' . $domain . '/editresult/' . $resultID .'">Edit Result</a></td>';
+    echo '<td><input type="checkbox" form="deleteresult" id="result_' . $resultID . '" name="result_' . $resultID . '" /><label for="result_' . $resultID . '"> Check To Delete</label></td></tr>' . PHP_EOL;
 }
-echo '        </table><br /><hr />' . PHP_EOL;
-
-require_once ('../src/inputAsync.php');
+echo '        </table>' . PHP_EOL;

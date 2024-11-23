@@ -119,12 +119,20 @@ if ($searchTerm == '' && $searchHash == '') {
         echo '                    <tr><td><select class="js-example-basic-single" id="includeRunner" name="includeRunner" form="refineSearch">' . PHP_EOL;
         echo '                        <option value=""></option>' . PHP_EOL;
         foreach ($players as $name) {
-            echo '                        <option value="' . $name . '">' . $name . '</option>' . PHP_EOL;
+            echo '                        <option value="' . $name . '"';
+            if (isset ($includeRunner) && $name == $includeRunner) {
+                echo ' selected';
+            }
+            echo '>' . $name . '</option>' . PHP_EOL;
         }
         echo '                     </select></td><td><select class="js-example-basic-single" id="excludeRunner" name="excludeRunner" form="refineSearch">' . PHP_EOL;
         echo '                        <option value=""></option>' . PHP_EOL;
         foreach ($players as $name) {
-            echo '                        <option value="' . $name . '">' . $name . '</option>' . PHP_EOL;
+            echo '                        <option value="' . $name . '"';
+            if (isset ($excludeRunner) && $name == $excludeRunner) {
+                echo ' selected';
+            }
+            echo '>' . $name . '</option>' . PHP_EOL;
         }
         echo '                     </select></td><td><input type="radio" id="raceType1" name="raceType" value="racetime" /> <label for="raceType1">Racetime Races Only</label><br /><input type="radio" id="raceType2" name="raceType" value="custom" /> <label for="raceType2">Custom Asyncs Only</label><br /><input type="radio" id="raceType3" name="raceType" value="both" checked /> <label for="raceType3">All Races</label></td><td><label for="startDate">From:</label> <input type="date" id="startDate" name="startDate" min="2022-02-21" max="' . date("Y-m-d") . '"';
         if (isset($startDate)) {
@@ -189,7 +197,7 @@ if ($searchTerm == '' && $searchHash == '') {
                 $searchQuery .= " AND raceSlug IN (SELECT raceSlug FROM results WHERE racerRacetimeID IN (SELECT racetimeID FROM racerinfo WHERE racetimeName = '" . $includeRunner . "'))";
             }
             if (isset($excludeRunner) && $excludeRunner != '') {
-                $searchQuery .= " AND raceSlug IN (SELECT raceSlug FROM results WHERE racerRacetimeID NOT IN (SELECT racetimeID FROM racerinfo WHERE racetimeName = '" . $excludeRunner . "'))";
+                $searchQuery .= " AND raceSlug NOT IN (SELECT raceSlug FROM results WHERE racerRacetimeID IN (SELECT racetimeID FROM racerinfo WHERE racetimeName = '" . $excludeRunner . "'))";
             }
             if (isset($raceType)) {
                 if ($raceType == 'racetime') {

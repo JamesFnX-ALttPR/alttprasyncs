@@ -47,17 +47,6 @@ if($errorCondition != null) {
     }
     echo '</td></tr>' . PHP_EOL;
     echo '                <tr><td>Real Times: </td><td>' . gmdate('G:i:s', $racer1RealTime) . '</td><td>' . gmdate('G:i:s', $racer2RealTime) . '</td></tr>' . PHP_EOL;
-    if($racer1IGT != null || $racer2IGT != null ) {
-        echo '                <tr><td>In Game Times: </td><td>';
-        if($racer1IGT != null) {
-            echo gmdate('G:i:s', $racer1IGT);
-        }
-        echo '</td><td>';
-        if($racer2IGT != null) {
-            echo gmdate('G:i:s', $racer2IGT);
-        }
-        echo '</td></tr>' . PHP_EOL;
-    }
     if($racer1CR != null || $racer2CR != null ) {
         echo '                <tr><td>Collection Rates: </td><td>';
         if($racer1CR != null) {
@@ -96,9 +85,6 @@ if($errorCondition != null) {
     echo '<input type="hidden" id="teamForfeit" name="teamForfeit" value="' . $teamForfeit . '" />';
     echo '<input type="hidden" id="racer1Name" name="racer1Name" value="' . $racer1Name . '" />';
     echo '<input type="hidden" id="racer1RealTime" name="racer1RealTime" value="' . $racer1RealTime . '" />';
-    if($racer1IGT != null) {
-        echo '<input type="hidden" id="racer1IGT" name="racer1IGT" value="' . $racer1IGT . '" />';
-    }
     if($racer1CR != null) {
         echo '<input type="hidden" id="racer1CR" name="racer1CR" value="' . $racer1CR . '" />';
     }
@@ -110,9 +96,6 @@ if($errorCondition != null) {
     }
     echo '<input type="hidden" id="racer2Name" name="racer2Name" value="' . $racer2Name . '" />';
     echo '<input type="hidden" id="racer2RealTime" name="racer2RealTime" value="' . $racer2RealTime . '" />';
-    if($racer2IGT != null) {
-        echo '<input type="hidden" id="racer2IGT" name="racer2IGT" value="' . $racer2IGT . '" />';
-    }
     if($racer2CR != null) {
         echo '<input type="hidden" id="racer2CR" name="racer2CR" value="' . $racer2CR . '" />';
     }

@@ -35,7 +35,7 @@ if(!isset($_GET['raceID'])) {
     $raceCreatedBy = $row['createdBy'];
     $pageTitle = 'View Times for ' . $raceSlug;
     if (is_post_request() && $_SESSION['userid'] == $raceCreatedBy) {
-        $fields = array("'place'", "'name'", "'team'", "'rt_seconds'", "'igt_seconds'", "'cr'", "'comment'", "'forfeit'", "'vod_link'");
+        $fields = array("'place'", "'name'", "'team'", "'rt_seconds'", "'cr'", "'comment'", "'forfeit'", "'vod_link'");
         $delimiter = ',';
         $filename = 'alttprasyncs-' . $raceSlug . date("Y-m-d H:i:s") . '.csv';
         $f = fopen('php://output', 'w');
@@ -57,15 +57,9 @@ if(!isset($_GET['raceID'])) {
             $racerForfeit = $row['racerForfeit'];
             if ($racerForfeit == 'y') {
                 $racerRT = '';
-                $racerIGT = '';
                 $racerCR = '';
             } else {
                 $racerRT = $row['racerRealTime'];
-                if ($row['racerInGameTime' == null]) {
-                    $racerIGT = '';
-                } else {
-                    $racerIGT = $row['racerInGameTime'];
-                }
                 if ($row['racerCheckCount' == null]) {
                     $racerCR = '';
                 } else {
@@ -86,7 +80,7 @@ if(!isset($_GET['raceID'])) {
             $stmt2->bindParam(':id', $racerID, PDO::PARAM_STR);
             $stmt2->execute();
             $racerName = $stmt2->fetchColumn();
-            $row_data = array($place, $racerName, $racerTeam, $racerRT, $racerIGT, $racerCR, $racerComment, $racerForfeit, $racerVOD);
+            $row_data = array($place, $racerName, $racerTeam, $racerRT, $racerCR, $racerComment, $racerForfeit, $racerVOD);
             fputcsv($f, $row_data, $delimiter);
         }
         fclose ($f);

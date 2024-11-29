@@ -38,7 +38,6 @@ if (is_post_request()) {
     $racetimeID = $row['racerRacetimeID'];
     $racerTeam = $row['racerTeam'];
     $racerRealTime = $row['racerRealTime'];
-    $racerIGT = $row['racerInGameTime'];
     $racerComment = $row['racerComment'];
     $racerForfeit = $row['racerForfeit'];
     $racerCR = $row['racerCheckCount'];
@@ -48,16 +47,11 @@ if (is_post_request()) {
     $stmt->bindValue(':racetimeID', $racetimeID, PDO::PARAM_STR);
     $stmt->execute();
     $racerName = $stmt->fetchColumn();
-    // Calculate hours, minutes, seconds of real time and IGT (if it exists) to populate edit form
+    // Calculate hours, minutes, seconds of real time to populate edit form
     if ($racerForfeit == 'n') {
         $racerRTSeconds = $racerRealTime % 60;
         $racerRTMinutes = intval(($racerRealTime - $racerRTSeconds) / 60) % 60;
         $racerRTHours = intval(intval(($racerRealTime - $racerRTSeconds) / 60) - $racerRTMinutes) / 60;
-    }
-    if ($racerForfeit == 'n' && $racerIGT != null) {
-        $racerIGTSeconds = $racerIGT % 60;
-        $racerIGTMinutes = intval(($racerRealTime - $racerIGTSeconds) / 60) % 60;
-        $racerIGTHours = intval(intval(($racerRealTime - $racerIGTSeconds) / 60) - $racerIGTMinutes) / 60;
     }
     // Make sure this user can edit this result
     if ($isAdmin == 'n' && $enteredBy != $_SESSION['userid']) {

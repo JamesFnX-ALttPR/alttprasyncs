@@ -27,9 +27,6 @@ if($errorCondition != null) {
     }
     echo '</td>' . PHP_EOL;
     echo '                <tr><td>Your Real Time: </td><td>' . gmdate('G:i:s', $racerRealTime) . '</td>' . PHP_EOL;
-    if($racerIGT != null) {
-        echo '                <tr><td>Your In Game Time: </td><td>' . gmdate('G:i:s', $racerIGT) . '</td>' . PHP_EOL;
-    }
     if($racerCR != null) {
         echo '                <tr><td>Your Collection Rate: </td><td>' . $racerCR . '</td>' . PHP_EOL;
     }
@@ -43,9 +40,6 @@ if($errorCondition != null) {
     echo '<input type="hidden" id="racer1Name" name="racer1Name" value="' . $racerName . '" />';
     echo '<input type="hidden" id="racer1RealTime" name="racer1RealTime" value="' . $racerRealTime . '" />';
     echo '<input type="hidden" id="racer1Forfeit" name="racer1Forfeit" value="' . $racerForfeit . '" />';
-    if($racerIGT != null) {
-        echo '<input type="hidden" id="racer1IGT" name="racer1IGT" value="' . $racerIGT . '" />';
-    }
     if($racerCR != null) {
         echo '<input type="hidden" id="racer1CR" name="racer1CR" value="' . $racerCR . '" />';
     }

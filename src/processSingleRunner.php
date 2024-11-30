@@ -8,17 +8,6 @@ if(!isset($_POST['racer1Forfeit'])) { // Check if the forfeit box was left unche
     } else {
         $errorCondition = 'Real Time not input correctly'; // Set error condition if time does not validate
     }
-    if($_POST['racer1IGTHours'] != '' && $_POST['racer1IGTMinutes'] != '' && $_POST['racer1IGTSeconds']!= '') { // Validate IGT entry is correct (all three boxes filled out)
-        $racerIGT = ( 3600 * intval($_POST['racer1IGTHours']) ) + ( 60 * intval($_POST['racer1IGTMinutes']) ) + intval($_POST['racer1IGTSeconds']);
-    } elseif($_POST['racer1IGTHours'] == '' && $_POST['racer1IGTMinutes'] == '' && $_POST['racer1IGTSeconds'] == '') { // If IGT doesn't validate, all boxes empty is still acceptable
-        $racerIGT = null;
-    } else {
-        if($errorCondition == null) { // Set error condition if IGT does not validate
-            $errorCondition = 'In Game Time not input correctly';
-        } else {
-            $errorCondition = $errorCondition . '<br />' . PHP_EOL . 'In Game Time not input correctly';
-        }
-    }
     if($_POST['racer1CR'] != '') { // Check if there's a CR and output null if not
         $racerCR = $_POST['racer1CR'];
     } else {
@@ -45,7 +34,6 @@ if(!isset($_POST['racer1Forfeit'])) { // Check if the forfeit box was left unche
 } else { // If the forfeit box is checked, this sets the interesting boxes.
     $racerForfeit = 'y';
     $racerRealTime = 35940;
-    $racerIGT = null;
     $racerCR = null;
     if($_POST['racer1Comments'] != '') { // Check if there are comments and output null if not
         $racerComment = $_POST['racer1Comments'];

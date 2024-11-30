@@ -31,23 +31,6 @@ echo '                <tr class="timeInput"';
 if ($racerForfeit == 'y') {
     echo ' style="display: none;"';
 }
-echo '><td><label for="racerIGTHours" title="Your time from the credits screen. Leave blank if not a single-segment run.">Your In-Game Time: </label></td><td><input type="number" id="racerIGTHours" name="racerIGTHours" min="0" max="24" placeholder="HH"';
-if(isset($racerIGTHours)) {
-    echo ' value ="' . $racerIGTHours . '"';
-}
-echo ' />:<input type="number" id="racerIGTMinutes" name="racerIGTMinutes" min="0" max="59" placeholder="MM"';
-if(isset($racerIGTMinutes)) {
-    echo ' value ="' . $racerIGTMinutes . '"';
-}
-echo ' />:<input type="number" id="racerIGTSeconds" name="racerIGTSeconds" min="0" max="59" placeholder="SS"';
-if(isset($racerIGTSeconds)) {
-    echo ' value ="' . $racerIGTSeconds . '"';
-}
-echo '/></td></tr>' . PHP_EOL;
-echo '                <tr class="timeInput"';
-if ($racerForfeit == 'y') {
-    echo ' style="display: none;"';
-}
 echo '><td><label for="racerCR" title="Your collected checks from the credits screen.">Your Collection Rate: </label></td><td><input class="CR" type="number" id="racerCR" name="racerCR" min="0"';
 if($racerCR != null) {
     echo ' value ="' . $racerCR . '"';

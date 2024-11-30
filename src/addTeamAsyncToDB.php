@@ -50,14 +50,9 @@ if(! $row) { // Check for existing runners
         $racer2ID = $checkRow2;
     }
     if($_POST['teamForfeit'] == 'n') {
-        $insertSQL = $pdo->prepare("INSERT INTO results (raceSlug, racerRacetimeID, racerTeam, racerRealTime, racerInGameTime, racerComment, racerForfeit, racerFromRacetime, racerCheckCount, racerVODLink, enteredBy) VALUES (:slug1, :id1, :team1, :rt1, :igt1, :comment1, :forfeit1, 'n', :cr1, :vod1, :enteredBy1), (:slug2, :id2, :team2, :rt2, :igt2, :comment2, :forfeit2, 'n', :cr2, :vod2, :enteredBy2)");
+        $insertSQL = $pdo->prepare("INSERT INTO results (raceSlug, racerRacetimeID, racerTeam, racerRealTime, racerComment, racerForfeit, racerFromRacetime, racerCheckCount, racerVODLink, enteredBy) VALUES (:slug1, :id1, :team1, :rt1, :comment1, :forfeit1, 'n', :cr1, :vod1, :enteredBy1), (:slug2, :id2, :team2, :rt2, :comment2, :forfeit2, 'n', :cr2, :vod2, :enteredBy2)");
         $teamName = $_POST['teamName'];
         $racer1RT = $_POST['racer1RealTime'];
-        if(isset($_POST['racer1IGT'])) {
-            $racer1IGT = $_POST['racer1IGT'];
-        } else {
-            $racer1IGT = null;
-        }
         if(isset($_POST['racer1Comment'])) {
             $racer1Comment = $_POST['racer1Comment'];
         } else {
@@ -75,11 +70,6 @@ if(! $row) { // Check for existing runners
             $racer1VOD = null;
         }
         $racer2RT = $_POST['racer2RealTime'];
-        if(isset($_POST['racer2IGT'])) {
-            $racer2IGT = $_POST['racer2IGT'];
-        } else {
-            $racer2IGT = null;
-        }
         if(isset($_POST['racer2Comment'])) {
             $racer2Comment = $_POST['racer2Comment'];
         } else {
@@ -105,7 +95,6 @@ if(! $row) { // Check for existing runners
         $insertSQL->bindParam(':id1', $racer1ID, PDO::PARAM_STR);
         $insertSQL->bindParam(':team1', $teamName, PDO::PARAM_STR);
         $insertSQL->bindParam(':rt1', $racer1RT, PDO::PARAM_INT);
-        $insertSQL->bindParam(':igt1', $racer1IGT, PDO::PARAM_INT);
         $insertSQL->bindParam(':comment1', $racer1Comment, PDO::PARAM_STR);
         $insertSQL->bindParam(':forfeit1', $racer1Forfeit, PDO::PARAM_STR);
         $insertSQL->bindParam(':cr1', $racer1CR, PDO::PARAM_INT);
@@ -115,7 +104,6 @@ if(! $row) { // Check for existing runners
         $insertSQL->bindParam(':id2', $racer2ID, PDO::PARAM_STR);
         $insertSQL->bindParam(':team2', $teamName, PDO::PARAM_STR);
         $insertSQL->bindParam(':rt2', $racer2RT, PDO::PARAM_INT);
-        $insertSQL->bindParam(':igt2', $racer2IGT, PDO::PARAM_INT);
         $insertSQL->bindParam(':comment2', $racer2Comment, PDO::PARAM_STR);
         $insertSQL->bindParam(':forfeit2', $racer2Forfeit, PDO::PARAM_STR);
         $insertSQL->bindParam(':cr2', $racer2CR, PDO::PARAM_INT);

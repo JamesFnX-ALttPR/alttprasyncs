@@ -18,7 +18,7 @@ if ($isAdmin == 'y') { //Admins can edit *all* submitted asyncs
     $stmt->bindValue(':enteredBy', $_SESSION['userid'], PDO::PARAM_INT);
     $stmt->execute();
 }
-echo '                <tr><th>Race Room</th><th>Share Async</th><th>Name</th><th>Team</th><th>Real Time</th><th>In-Game Time</th><th><span title="Collection Rate">CR</span></th><th>Comments</th><th>Link to VOD</th><th>Edit</th><th><form method="post" action="' . $domain . '/deleteresult" id="deleteresult"><input type="submit" class="submitButton" form="deleteresult" value="Delete Results" /></form></th></tr>' . PHP_EOL;
+echo '                <tr><th>Race Room</th><th>Share Async</th><th>Name</th><th>Team</th><th>Real Time</th><th><span title="Collection Rate">CR</span></th><th>Comments</th><th>Link to VOD</th><th>Edit</th><th><form method="post" action="' . $domain . '/deleteresult" id="deleteresult"><input type="submit" class="submitButton" form="deleteresult" value="Delete Results" /></form></th></tr>' . PHP_EOL;
 while($row = $stmt->fetch()) {
     $rowCounter++;
     if($rowCounter % 2 == 0) {
@@ -31,7 +31,6 @@ while($row = $stmt->fetch()) {
     $racetimeID = $row['racerRacetimeID'];
     $racerTeam = $row['racerTeam'];
     $racerRealTime = $row['racerRealTime'];
-    $racerIGT = $row['racerInGameTime'];
     $racerCR = $row['racerCheckCount'];
     $racerComment = $row['racerComment'];
     $racerForfeit = $row['racerForfeit'];
@@ -47,11 +46,9 @@ while($row = $stmt->fetch()) {
     $raceID = $stmt2->fetchColumn();
     echo $startOfRow . '<td><a href="' . $domain . '/results/' . $raceID . '">' . $raceSlug . '</a></td><td><a href="' . $domain . '/async/' . $raceID . '">Share Async</a></td><td>' . $racerName . '</td><td>' . $racerTeam . '</td><td>';
     if ($racerForfeit == 'y') {
-        echo 'FF</td><td>FF</td>';
-    } elseif ($racerForfeit == 'n' && $racerIGT != null) {
-        echo gmdate('G:i:s', $racerRealTime) . '</td><td>' . gmdate('G:i:s', $racerIGT) . '</td>';
+        echo 'FF</td>';
     } else {
-        echo gmdate('G:i:s', $racerRealTime) . '</td><td>N/A</td>';
+        echo gmdate('G:i:s', $racerRealTime) . '</td>';
     }
     echo '<td>' . $racerCR . '<td>' . $racerComment . '</td><td>' . $racerVODLink . '</td><td><a href="' . $domain . '/editresult/' . $resultID .'">Edit Result</a></td>';
     echo '<td><input type="checkbox" form="deleteresult" id="result_' . $resultID . '" name="result_' . $resultID . '" /><label for="result_' . $resultID . '"> Check To Delete</label></td></tr>' . PHP_EOL;

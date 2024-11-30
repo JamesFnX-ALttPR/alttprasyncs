@@ -19,28 +19,6 @@ if(!isset($_POST['racer1Forfeit'])) { // Check if the forfeit box was left unche
             $errorCondition = $errorCondition . '<br />' . PHP_EOL . 'Player 2 Real Time not input correctly';
         }
     }
-    if($_POST['racer1IGTHours'] != '' && $_POST['racer1IGTMinutes'] != '' && $_POST['racer1IGTSeconds']!= '') { // Validate IGT entry is correct (all three boxes filled out)
-        $racer1IGT = ( 3600 * intval($_POST['racer1IGTHours']) ) + ( 60 * intval($_POST['racer1IGTMinutes']) ) + intval($_POST['racer1IGTSeconds']);
-    } elseif($_POST['racer1IGTHours'] == '' && $_POST['racer1IGTMinutes'] == '' && $_POST['racer1IGTSeconds'] == '') { // If IGT doesn't validate, all boxes empty is still acceptable
-        $racer1IGT = null;
-    } else {
-        if($errorCondition == null) { // Set error condition if IGT does not validate
-            $errorCondition = 'Player 1 In Game Time not input correctly';
-        } else {
-            $errorCondition = $errorCondition . '<br />' . PHP_EOL . 'Player 1 In Game Time not input correctly';
-        }
-    }
-    if($_POST['racer2IGTHours'] != '' && $_POST['racer2IGTMinutes'] != '' && $_POST['racer2IGTSeconds']!= '') { // Validate IGT entry is correct (all three boxes filled out)
-        $racer2IGT = ( 3600 * intval($_POST['racer2IGTHours']) ) + ( 60 * intval($_POST['racer2IGTMinutes']) ) + intval($_POST['racer2IGTSeconds']);
-    } elseif($_POST['racer2IGTHours'] == '' && $_POST['racer2IGTMinutes'] == '' && $_POST['racer2IGTSeconds'] == '') { // If IGT doesn't validate, all boxes empty is still acceptable
-        $racer2IGT = null;
-    } else {
-        if($errorCondition == null) { // Set error condition if IGT does not validate
-            $errorCondition = 'Player 2 In Game Time not input correctly';
-        } else {
-            $errorCondition = $errorCondition . '<br />' . PHP_EOL . 'Player 2 In Game Time not input correctly';
-        }
-    }
     if($_POST['racer1CR'] != '') { // Check if there's a CR and output null if not
         $racer1CR = $_POST['racer1CR'];
     } else {
@@ -91,8 +69,6 @@ if(!isset($_POST['racer1Forfeit'])) { // Check if the forfeit box was left unche
     $teamForfeit = 'y';
     $racer1RealTime = 35940;
     $racer2RealTime = 35940;
-    $racer1IGT = null;
-    $racer2IGT = null;
     $racer1CR = null;
     $racer2CR = null;
     if($_POST['racer1Comments'] != '') { // Check if there are comments and output null if not

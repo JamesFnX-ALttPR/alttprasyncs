@@ -1,6 +1,6 @@
 <?php
 
-// Variables from inputEditAsync - (racerTeam), racerForfeit, racerRTHours, racerRTMinutes, racerRTSeconds, racerIGTHours, racerIGTMinutes, racerIGTSeconds, racerCR, racerComment, racerVOD, raceSlug
+// Variables from inputEditAsync - (racerTeam), racerForfeit, racerRTHours, racerRTMinutes, racerRTSeconds, racerCR, racerComment, racerVOD, raceSlug
 
 $errors = null; //Set error variable to empty, check for errors at the end
 if (isset($_POST['racerTeam'])) {
@@ -11,7 +11,6 @@ if (isset($_POST['racerTeam'])) {
 if (isset($_POST['racerForfeit'])) {
     $racerForfeit = 'y';
     $racerRealTime = 20000;
-    $racerIGT = null;
     $racerCR = null;
 } else {
     $racerForfeit = 'n';
@@ -22,16 +21,6 @@ if (isset($_POST['racerForfeit'])) {
         $racerRealTime = 3600 * $racerRTHours + 60 * $racerRTMinutes + $racerRTSeconds;
     } else {
         $errors .= 'Real Time not entered properly, please fill in all three fields. If Real Time is less than 1 hour, input 0 for hours.<br />';
-    }
-    $racerIGTHours = $_POST['racerIGTHours'];
-    $racerIGTMinutes = $_POST['racerIGTMinutes'];
-    $racerIGTSeconds = $_POST['racerIGTSeconds'];
-    if ($racerIGTHours == '' && $racerIGTMinutes == '' && $racerIGTSeconds == '') {
-        $racerIGT = null;
-    } elseif ($racerIGTHours != '' && $racerIGTMinutes != '' && $racerIGTSeconds != '') {
-        $racerIGT = 3600 * $racerIGTHours + 60 * $racerIGTMinutes + $racerIGTSeconds;
-    } else {
-        $errors .= 'In-Game Time not entered properly, please fill in all three fields. If In-Game Time is less than 1 hour, input 0 for hours.<br />';
     }
     if ($_POST['racerCR'] == '') {
         $racerCR = null;
@@ -59,9 +48,8 @@ if ($errors != '') {
     echo '        <div class="error">' . $errors . '</div>' . PHP_EOL;
 } else {
     if (isset($_POST['raceIsTeam'])) {
-        $stmt = $pdo->prepare("UPDATE results SET racerRealTime = :racerRealTime, racerInGameTime = :racerInGameTime, racerComment = :racerComment, racerForfeit = :racerForfeit, racerCheckCount = :racerCR, racerVODLink = :racerVOD WHERE id = :id");
+        $stmt = $pdo->prepare("UPDATE results SET racerRealTime = :racerRealTime, racerComment = :racerComment, racerForfeit = :racerForfeit, racerCheckCount = :racerCR, racerVODLink = :racerVOD WHERE id = :id");
         $stmt->bindValue(':racerRealTime', $racerRealTime, PDO::PARAM_INT);
-        $stmt->bindValue(':raceInGameTime', $racerIGT, PDO::PARAM_INT);
         $stmt->bindValue(':racerComment', $racerComment, PDO::PARAM_STR);
         $stmt->bindValue(':racerForfeit', $racerForfeit, PDO::PARAM_STR);
         $stmt->bindValue(':racerCR', $racerCR, PDO::PARAM_INT);
@@ -103,9 +91,6 @@ if ($errors != '') {
         } else {
             echo '                <tr><th class="rightAlign">Forfeit:</th><td>No</td></tr>' . PHP_EOL;
             echo '                <tr><th class="rightAlign">Your Time:</th><td>' . gmdate('G:i:s', $racerRealTime) . '</td></tr>' . PHP_EOL;
-            if ($racerIGT != null) {
-                echo '                <tr><th class="rightAlign">Your In-Game Time:</th><td>' . gmdate('G:i:s', $racerIGT) . '</td></tr>' . PHP_EOL;
-            }
             if ($racerCR != null) {
                 echo '                <tr><th class="rightAlign">Your Collection Rate:</th><td>' . $racerCR . '</td></tr>' . PHP_EOL;
             }
@@ -119,9 +104,8 @@ if ($errors != '') {
         echo '            </tbody>' . PHP_EOL;
         echo '        </table>' . PHP_EOL;
     } else {
-        $stmt = $pdo->prepare("UPDATE results SET racerRealTime = :racerRealTime, racerInGameTime = :racerInGameTime, racerComment = :racerComment, racerForfeit = :racerForfeit, racerCheckCount = :racerCR, racerVODLink = :racerVOD WHERE id = :id");
+        $stmt = $pdo->prepare("UPDATE results SET racerRealTime = :racerRealTime, racerComment = :racerComment, racerForfeit = :racerForfeit, racerCheckCount = :racerCR, racerVODLink = :racerVOD WHERE id = :id");
         $stmt->bindValue(':racerRealTime', $racerRealTime, PDO::PARAM_INT);
-        $stmt->bindValue(':racerInGameTime', $racerIGT, PDO::PARAM_INT);
         $stmt->bindValue(':racerComment', $racerComment, PDO::PARAM_STR);
         $stmt->bindValue(':racerForfeit', $racerForfeit, PDO::PARAM_STR);
         $stmt->bindValue(':racerCR', $racerCR, PDO::PARAM_INT);
@@ -150,9 +134,6 @@ if ($errors != '') {
         } else {
             echo '                <tr><th class="rightAlign">Forfeit:</th><td>No</td></tr>' . PHP_EOL;
             echo '                <tr><th class="rightAlign">Your Time:</th><td>' . gmdate('G:i:s', $racerRealTime) . '</td></tr>' . PHP_EOL;
-            if ($racerIGT != null) {
-                echo '                <tr><th class="rightAlign">Your In-Game Time:</th><td>' . gmdate('G:i:s', $racerIGT) . '</td></tr>' . PHP_EOL;
-            }
             if ($racerCR != null) {
                 echo '                <tr><th class="rightAlign">Your Collection Rate:</th><td>' . $racerCR . '</td></tr>' . PHP_EOL;
             }

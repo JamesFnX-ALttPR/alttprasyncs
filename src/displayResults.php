@@ -44,10 +44,6 @@ if($raceIsTeam == 'n') {
     $finisherCount = $racerCount - $forfeitCount;
     echo '        Teams: ';
 }
-$stmt = $pdo->prepare("SELECT count(1) FROM results WHERE raceSlug = :raceSlug AND racerInGameTime IS NOT NULL");
-$stmt->bindValue(':raceSlug', $raceSlug, PDO::PARAM_STR);
-$stmt->execute();
-$igtCount = $stmt->fetchColumn();
 $stmt = $pdo->prepare("SELECT count(1) FROM results WHERE raceSlug = :raceSlug AND racerCheckCount IS NOT NULL");
 $stmt->bindValue(':raceSlug', $raceSlug, PDO::PARAM_STR);
 $stmt->execute();
@@ -69,13 +65,6 @@ if ($raceAverage) {
     $raceAverage = round($raceAverage);
     echo '        Average Finish: ' . gmdate('G:i:s', $raceAverage);
 }
-if($igtCount > 0) {
-    $stmt = $pdo->prepare("SELECT AVG(racerInGameTime) FROM results WHERE raceSlug = :raceSlug AND racerInGameTime IS NOT NULL AND racerForfeit = 'n'");
-    $stmt->bindValue(':raceSlug', $raceSlug, PDO::PARAM_STR);
-    $stmt->execute();
-    $igtAverage = round($stmt->fetchColumn());
-    echo ' - IGT Average: ' . gmdate('G:i:s', $igtAverage);
-}
 if($checkCount > 0) {
     $stmt = $pdo->prepare("SELECT AVG(racerCheckCount) FROM results WHERE raceSlug = :raceSlug AND racerCheckCount IS NOT NULL AND racerCheckCount != 0 AND racerForfeit = 'n'");
     $stmt->bindValue(':raceSlug', $raceSlug, PDO::PARAM_STR);
@@ -90,10 +79,6 @@ if($raceIsTeam == 'n') {
     $sql = 'SELECT racerRacetimeID, racerRealTime, racerFromRacetime';
     echo '            <thead>' . PHP_EOL;
     echo '                <tr><th>Place</th><th>Name</th><th>Finish Time</th>';
-    if($igtCount > 0) {
-        echo '<th>In Game Time</th>';
-        $sql = $sql . ', racerInGameTime';
-    }
     if($commentCount > 0) {
         $sql = $sql . ', racerComment';
     }
@@ -139,13 +124,6 @@ if($raceIsTeam == 'n') {
             }
         }
         echo '</td><td>' . gmdate('G:i:s', $row['racerRealTime']) . '</td>';
-        if($igtCount > 0) {
-            if($row['racerInGameTime'] != null) {
-                echo '<td>' . gmdate('G:i:s', $row['racerInGameTime']) . '</td>';
-            } else {
-                echo '<td>N/A</td>';
-            }
-        }
         if($checkCount > 0) {
             if($row['racerCheckCount'] != null) {
                 echo '<td>' . $row['racerCheckCount'] . '</td>';
@@ -192,9 +170,6 @@ if($raceIsTeam == 'n') {
             }
         }
         echo '</td><td>Forfeit</td>';
-        if($igtCount > 0) {
-            echo '<td>Forfeit</td>';
-        }
         if($checkCount > 0) {
             echo '<td>FF</td>';
         }
@@ -208,10 +183,6 @@ if($raceIsTeam == 'n') {
     echo '            <thead>' . PHP_EOL;
     echo '                <tr><th>Place</th><th>Name</th><th>Real Time</th>';
     $sql = 'SELECT racerRacetimeID, racerRealTime, racerFromRacetime';
-    if($igtCount > 0) {
-        echo '<th>In Game Time</th>';
-        $sql = $sql . ', racerInGameTime';
-    }
     if($commentCount > 0) {
         $sql = $sql . ', racerComment';
     }
@@ -223,20 +194,17 @@ if($raceIsTeam == 'n') {
         echo '<th>Link to VOD</th>';
         $sql = $sql . ', racerVODLink';
     }
-    echo '</td>' . PHP_EOL;
+    echo '</tr>' . PHP_EOL;
     echo '            </thead>' . PHP_EOL;
     echo '            <tbody>' . PHP_EOL;
     $sql = $sql . " FROM results WHERE raceSlug = :raceSlug AND racerTeam = :racerTeam ORDER BY racerRealTime";
     $rowCount = 0;
-    $sql2 = $pdo->prepare("SELECT teamName, averageTime, averageIGT, averageCR FROM results_temp WHERE teamForfeit = 'n' ORDER BY averageTime");
+    $sql2 = $pdo->prepare("SELECT teamName, averageTime, averageCR FROM results_temp WHERE teamForfeit = 'n' ORDER BY averageTime");
     $sql2->execute();
     while($teamRow = $sql2->fetch()) {
         $rowCount++;
         $teamName = $teamRow['teamName'];
         $teamAverageTime = round($teamRow['averageTime'], 0);
-        if($igtCount > 0 && $teamRow['averageIGT'] != null) {
-            $teamAverageIGT = round($teamRow['averageIGT'], 0);
-        }
         if($checkCount > 0 && $teamRow['averageCR'] != null) {
             $teamAverageCR = round($teamRow['averageCR'], 0);
         }
@@ -246,14 +214,9 @@ if($raceIsTeam == 'n') {
             echo '                <tr class="team odd">';
         }
         echo '<td class="place' . $rowCount . '">' . $rowCount . '</td><td>' . $teamName . '</td><td>' . gmdate('G:i:s', $teamAverageTime) . '</td>';
-        if($igtCount > 0 && $teamRow['averageIGT'] != null) {
-            echo '<td>' . gmdate('G:i:s', $teamAverageIGT) . '</td>';
-        } else {
-            echo '<td>N/A</td>';
-        }
         if($checkCount > 0 && $teamRow['averageCR'] != null) {
             echo '<td>' . $teamAverageCR . '</td>';
-        } else {
+        } elseif ($checkCount > 0 && $teamRow['averageCR'] == null) {
             echo '<td>N/A</td>';
         }
         if($vodCount > 0) {
@@ -289,13 +252,6 @@ if($raceIsTeam == 'n') {
                 }
             }
             echo '</td><td class="teamRacerData">' . gmdate('G:i:s', $row['racerRealTime']) . '</td>';
-            if($igtCount > 0) {
-                if($row['racerInGameTime'] != null) {
-                    echo '<td class="teamRacerData">' . gmdate('G:i:s', $row['racerInGameTime']) . '</td>';
-                } else {
-                    echo '<td class="teamRacerData">N/A</td>';
-                }
-            }
             if($checkCount > 0) {
                 if($row['racerCheckCount'] != null) {
                     echo '<td class="teamRacerData">' . $row['racerCheckCount'] . '</td>';
@@ -324,9 +280,6 @@ if($raceIsTeam == 'n') {
             echo '                <tr class="team odd">';
         }
         echo '<td class="ff">FF</td><td>' . $teamName . '</td><td>Forfeit</td>';
-        if($igtCount > 0) {
-            echo '<td>Forfeit</td>';
-        }
         if($checkCount > 0) {
             echo '<td>FF</td>';
         }
@@ -363,9 +316,6 @@ if($raceIsTeam == 'n') {
                 }
             }
             echo '</td><td class="teamRacerData">Forfeit</td>';
-            if($igtCount > 0) {
-                echo '<td class="teamRacerData">Forfeit</td>';
-            }
             if($checkCount > 0) {
                 echo '<td class="teamRacerData">FF</td>';
             }

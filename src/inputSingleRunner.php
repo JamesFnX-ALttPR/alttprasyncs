@@ -27,19 +27,6 @@ if(isset($_POST['racer1RTSeconds'])) {
     echo ' value ="' . $_POST['racer1RTSeconds'] . '"';
 }
 echo ' /></td></tr>' . PHP_EOL;
-echo '                <tr class="timeInput"><td><label for="racer1IGTHours" title="Your time from the credits screen. Leave blank if not a single-segment run.">Your In-Game Time: </label></td><td><input type="number" id="racer1IGTHours" name="racer1IGTHours" min="0" max="24" placeholder="HH"';
-if(isset($_POST['racer1IGTHours'])) {
-    echo ' value ="' . $_POST['racer1IGTHours'] . '"';
-}
-echo ' />:<input type="number" id="racer1IGTMinutes" name="racer1IGTMinutes" min="0" max="59" placeholder="MM"';
-if(isset($_POST['racer1IGTMinutes'])) {
-    echo ' value ="' . $_POST['racer1IGTMinutes'] . '"';
-}
-echo ' />:<input type="number" id="racer1IGTSeconds" name="racer1IGTSeconds" min="0" max="59" placeholder="SS"';
-if(isset($_POST['racer1IGTSeconds'])) {
-    echo ' value ="' . $_POST['racer1IGTSeconds'] . '"';
-}
-echo '/></td></tr>' . PHP_EOL;
 echo '                <tr class="timeInput"><td><label for="racer1CR" title="Your collected checks from the credits screen.">Your Collection Rate: </label></td><td><input class="CR" type="number" id="racer1CR" name="racer1CR" min="0"';
 if(isset($_POST['racer1CR'])) {
     echo ' value ="' . $_POST['racer1CR'] . '"';

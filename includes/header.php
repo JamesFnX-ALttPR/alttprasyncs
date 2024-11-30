@@ -15,7 +15,7 @@ echo '        <script src="' . $domain . '/sorttable.js"></script>' . PHP_EOL;
 echo '        <meta charset="UTF-8">' . PHP_EOL;
 echo '    </head>' . PHP_EOL;
 echo '    <body>' . PHP_EOL;
-echo '        <div class="topline"><a class="toplinks" href="' . $domain . '/search">Search</a>';
+echo '        <div class="topline"><a class="toplinks" href="' . $domain . '">Search</a>';
 $stmt = $pdo->prepare("SELECT id FROM series");
 $stmt->execute();
 $chk = $stmt->fetchColumn();

@@ -19,12 +19,12 @@
 }
 
 // Check if password is in a valid format
-if ($_POST['password1'] != '') {
-    if(strlen($_POST['password1']) < 8) {
+if ($_POST['password'] != '') {
+    if(strlen($_POST['password']) < 8) {
         $errors .= 'Password does not meet requirements.<br />';
     }
     $pattern = "#.*^(?=.{8,64})(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).*$#";
-    if (preg_match($pattern, $_POST['password1']) == false && strlen($_POST['password1']) < 16) {
+    if (preg_match($pattern, $_POST['password']) == false && strlen($_POST['password']) < 16) {
         $errors .= 'Password does not meet requirements.<br />';
     }
 } else {
@@ -32,8 +32,8 @@ if ($_POST['password1'] != '') {
 }
 
 // Check if password fields match
-if ($_POST['password2'] != '') {
-    if ($_POST['password2'] != $_POST['password1']) {
+if ($_POST['confirmPassword'] != '') {
+    if ($_POST['confirmPassword'] != $_POST['password']) {
         $errors .= 'Passwords do not match. Please make sure they match and try again.<br />';
     }
 } else {
@@ -51,7 +51,7 @@ if ($errors != '') {
     $sql = "INSERT INTO asyncusers (email, password, is_admin, displayName, registered_ip, registered_date) VALUES (:email, :password, 'n', :displayName, :ip, NOW())";
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(':email', $email, PDO::PARAM_STR);
-    $stmt->bindValue(':password', password_hash($_POST['password1'], PASSWORD_BCRYPT));
+    $stmt->bindValue(':password', password_hash($_POST['password'], PASSWORD_BCRYPT));
     $stmt->bindValue(':displayName', $displayName, PDO::PARAM_STR);
     $stmt->bindValue(':ip', $login_ip, PDO::PARAM_STR);
     $stmt->execute();

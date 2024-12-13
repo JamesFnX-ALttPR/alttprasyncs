@@ -16,7 +16,6 @@ $members = $rslt['seriesMembers'];
             <tbody>
 <?php 
 $memberArray = explode(', ', $members);
-print_r($memberArray);
 if ($memberArray[0] != null) {
     $rowCounter = 0;
     foreach($memberArray as $raceID) {

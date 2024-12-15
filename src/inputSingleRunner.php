@@ -46,7 +46,7 @@ if(isset($_POST['racer1VOD'])) {
     echo ' value ="' . $_POST['racer1VOD'] . '"';
 }
 echo ' /></td></tr>' . PHP_EOL;
-echo '                <tr><td colspan="2" class="submitButton"><input type="Submit" class="submitButton" value="Submit Time" /></td></tr>' . PHP_EOL;
+echo '                <tr><td class="submitButton"><input type="Submit" class="submitButton" value="Submit Time" /></td><td class="submitAsync"><a href="' . $domain . '/results/' . $raceID  . '" class="fakeButton">Show Results Only</a></td></tr>' . PHP_EOL;
 echo '            </table>' . PHP_EOL;
 if (isset($_SESSION['userid'])) {
     echo '            <input type="hidden" id="enteredBy" name="enteredBy" value="' . $_SESSION['userid'] . '" />' . PHP_EOL;

@@ -40,7 +40,7 @@ if($raceIsSpoiler == 'y') {
     }
 }
 ?>
-        <?php if ($raceDescription != '') { echo '<br />'; } ?>
+        <?php if ($raceDescription != '') { echo $raceDescription . '<br />'; } ?>
         Seed Link - <a target="_blank" href="<?= $raceSeed ?>"><?= $raceSeed ?></a> - Hash: <?php echo hashToImages($raceHash); ?><br />
 <?php $stmt = $pdo->prepare('SELECT racetimeName FROM racerinfo WHERE racetimeID IN (SELECT racerRacetimeID FROM results WHERE raceSlug = ?) ORDER BY racetimeName');
 $stmt->execute([$raceSlug]);

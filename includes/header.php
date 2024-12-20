@@ -8,6 +8,7 @@ echo '        <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.3/the
 echo '        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />' . PHP_EOL;
 echo '        <link rel="stylesheet" href="' . $domain . '/includes/styles.css" />' . PHP_EOL;
 echo '        <title>ALttPR Asyncs - ' . $pageTitle . '</title>' . PHP_EOL; //Variable $pageTitle specified on each page
+echo '        <script src="https://js.hcaptcha.com/1/api.js" async defer></script>' . PHP_EOL;
 echo '        <script src="https://code.jquery.com/jquery-3.7.0.js"></script>' . PHP_EOL;
 echo '        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>' . PHP_EOL;
 echo '        <script src="https://code.jquery.com/ui/1.13.3/jquery-ui.min.js"></script>' . PHP_EOL;

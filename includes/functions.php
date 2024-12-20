@@ -28,7 +28,6 @@ function curlData($s) {
     curl_setopt($ch, CURLOPT_URL, $s);
     curl_setopt($ch, CURLOPT_HEADER, 0);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     return curl_exec($ch);
 }
 

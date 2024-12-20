@@ -54,6 +54,11 @@
                         </td>
                     </tr>
                     <tr>
+                        <td colspan="2">
+                        <div class="g-recaptcha" data-sitekey="8392acd6-1624-4ad4-8d48-625ad14a9f9c" style="text-align: center;"></div>
+                        </td>
+                    </tr>
+                    <tr>
                         <td colspan="2" class="submitButton">
                             <input type="Submit" id="submitButton" class="submitButton" value="Register" disabled />
                         </td>

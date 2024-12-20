@@ -40,11 +40,32 @@ if ($_POST['confirmPassword'] != '') {
     $errors .= 'Please enter a new password.<br />';
 }
 
+// Verify with hCaptcha
+if (isset($_POST['h-captcha-response']) && !empty($_POST['h-captcha-response'])) {
+    // Get verify response
+    $data = array(
+        'secret' => "ES_e984ba4ab5324376ada817c539ffa7b5",
+        'response' => $_POST['h-captcha-response']
+    );
+    $verify = curl_init();
+    curl_setopt($verify, CURLOPT_URL, "https://hcaptcha.com/siteverify");
+    curl_setopt($verify, CURLOPT_POST, true);
+    curl_setopt($verify, CURLOPT_POSTFIELDS, http_build_query($data));
+    curl_setopt($verify, CURLOPT_RETURNTRANSFER, true);
+    $verifyResponse = curl_exec($verify);
+    $responseData = json_decode($verifyResponse);
+    if ($responseData->success) {
+    } else {
+        $errors .= 'Unable to verify, please complete CAPTCHA.<br />';
+    }
+} else {
+    $errors .= 'Please complete CAPTCHA.<br />';
+}
 $displayName = strip_tags($_POST['displayName']);
 
 // Output errors if needed, otherwise add to database and load login page
 if ($errors != '') {
-    echo '        <div class="error">' . $errors . ' - Please Try Again</div><br /><hr />' . PHP_EOL;
+    echo '        <div class="error">' . $errors . 'Please Try Again</div><hr />' . PHP_EOL;
     require_once ('../src/inputNewUser.php');
 } else {
     $login_ip = $_SERVER['REMOTE_ADDR'];
@@ -55,5 +76,6 @@ if ($errors != '') {
     $stmt->bindValue(':displayName', $displayName, PDO::PARAM_STR);
     $stmt->bindValue(':ip', $login_ip, PDO::PARAM_STR);
     $stmt->execute();
+    echo '        <div class="error">User successfully registered. Please log in.</div><hr />' . PHP_EOL;
     require_once ('../src/loginForm.php');
 }

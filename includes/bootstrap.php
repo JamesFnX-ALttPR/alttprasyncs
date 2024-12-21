@@ -1,6 +1,11 @@
 <?php
 require_once ('../includes/functions.php');
 require_once ('../config/settings.php');
+session_set_cookie_params([
+    'lifetime' => 28800,
+    'secure' => true,
+    'httponly' => true
+]);
 session_start();
 $domain = getRequestURL();
 

@@ -30,12 +30,12 @@ if(!isset($_POST['racer1Forfeit'])) { // Check if the forfeit box was left unche
         $racer2CR = null;
     }
     if($_POST['racer1Comments'] != '') { // Check if there are comments and output null if not
-        $racer1Comment = $_POST['racer1Comments'];
+        $racer1Comment = htmlentities($_POST['racer1Comments'], ENT_COMPAT, "UTF-8", false);
     } else {
         $racer1Comment = null;
     }
     if($_POST['racer2Comments'] != '') { // Check if there are comments and output null if not
-        $racer2Comment = $_POST['racer2Comments'];
+        $racer2Comment = htmlentities($_POST['racer2Comments'], ENT_COMPAT, "UTF-8", false);
     } else {
         $racer2Comment = null;
     }
@@ -72,12 +72,12 @@ if(!isset($_POST['racer1Forfeit'])) { // Check if the forfeit box was left unche
     $racer1CR = null;
     $racer2CR = null;
     if($_POST['racer1Comments'] != '') { // Check if there are comments and output null if not
-        $racer1Comment = $_POST['racer1Comments'];
+        $racer1Comment = htmlentities($_POST['racer1Comments'], ENT_COMPAT, "UTF-8", false);
     } else {
         $racer1Comment = null;
     }
     if($_POST['racer2Comments'] != '') { // Check if there are comments and output null if not
-        $racer2Comment = $_POST['racer2Comments'];
+        $racer2Comment = htmlentities($_POST['racer2Comments'], ENT_COMPAT, "UTF-8", false);
     } else {
         $racer2Comment = null;
     }

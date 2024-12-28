@@ -50,7 +50,7 @@ while($row = $stmt->fetch()) {
     } else {
         echo gmdate('G:i:s', $racerRealTime) . '</td>';
     }
-    echo '<td>' . $racerCR . '<td>' . $racerComment . '</td><td>' . $racerVODLink . '</td><td><a href="' . $domain . '/editresult/' . $resultID .'">Edit Result</a></td>';
+    echo '<td>' . $racerCR . '<td>' . htmlentities($racerComment, ENT_QUOTES, "UTF-8", false) . '</td><td>' . $racerVODLink . '</td><td><a href="' . $domain . '/editresult/' . $resultID .'">Edit Result</a></td>';
     echo '<td><input type="checkbox" form="deleteresult" id="result_' . $resultID . '" name="result_' . $resultID . '" /><label for="result_' . $resultID . '"> Check To Delete</label></td></tr>' . PHP_EOL;
 }
 echo '        </table>' . PHP_EOL;

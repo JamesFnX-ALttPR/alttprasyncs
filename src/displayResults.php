@@ -120,7 +120,7 @@ if($raceIsTeam == 'n') {
         echo '<td class="place' . $rowCount . '">' . $rowCount . '</td><td>' . $racerName;
         if($commentCount > 0) {
             if($row['racerComment'] != null) {
-                echo ' <span class="comment" title = "' . $row['racerComment'] . '">[Comment]</span>';
+                echo ' <span class="comment" title = "' . htmlentities($row['racerComment'], ENT_QUOTES, "UTF-8", false) . '">[Comment]</span>';
             }
         }
         echo '</td><td>' . gmdate('G:i:s', $row['racerRealTime']) . '</td>';
@@ -166,7 +166,7 @@ if($raceIsTeam == 'n') {
         echo '<td class="ff">FF</td><td>' . $racerName;
         if($commentCount > 0) {
             if($row['racerComment'] != null) {
-                echo ' <span class="comment" title = "' . $row['racerComment'] . '">[Comment]</span>';
+                echo ' <span class="comment" title = "' . htmlentities($row['racerComment'], ENT_QUOTES, "UTF-8", false) . '">[Comment]</span>';
             }
         }
         echo '</td><td>Forfeit</td>';
@@ -248,7 +248,7 @@ if($raceIsTeam == 'n') {
             echo '<td class="place' . $rowCount . '"></td><td class="teamRacerName">' . $racerName;
             if($commentCount > 0) {
                 if($row['racerComment'] != null) {
-                    echo ' <span class="comment" title = "' . $row['racerComment'] . '">[Comment]</span>';
+                    echo ' <span class="comment" title = "' . htmlentities($row['racerComment'], ENT_QUOTES, "UTF-8", false) . '">[Comment]</span>';
                 }
             }
             echo '</td><td class="teamRacerData">' . gmdate('G:i:s', $row['racerRealTime']) . '</td>';
@@ -312,7 +312,7 @@ if($raceIsTeam == 'n') {
             echo '<td class="ff"></td><td class="teamRacerName">' . $racerName;
             if($commentCount > 0) {
                 if($row['racerComment'] != null) {
-                    echo ' <span class="comment" title = "' . $row['racerComment'] . '">[Comment]</span>';
+                    echo ' <span class="comment" title = "' . htmlentities($row['racerComment'], ENT_QUOTES, "UTF-8", false) . '">[Comment]</span>';
                 }
             }
             echo '</td><td class="teamRacerData">Forfeit</td>';

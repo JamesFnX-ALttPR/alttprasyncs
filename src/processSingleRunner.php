@@ -14,7 +14,7 @@ if(!isset($_POST['racer1Forfeit'])) { // Check if the forfeit box was left unche
         $racerCR = null;
     }
     if($_POST['racer1Comments'] != '') { // Check if there are comments and output null if not
-        $racerComment = $_POST['racer1Comments'];
+        $racerComment = htmlentities($_POST['racer1Comments'], ENT_QUOTES, 'UTF-8', false);
     } else {
         $racerComment = null;
     }
@@ -36,7 +36,7 @@ if(!isset($_POST['racer1Forfeit'])) { // Check if the forfeit box was left unche
     $racerRealTime = 35940;
     $racerCR = null;
     if($_POST['racer1Comments'] != '') { // Check if there are comments and output null if not
-        $racerComment = $_POST['racer1Comments'];
+        $racerComment = htmlentities($_POST['racer1Comments'], ENT_QUOTES, 'UTF-8', false);
     } else {
         $racerComment = null;
     }

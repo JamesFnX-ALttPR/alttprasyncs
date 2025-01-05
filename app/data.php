@@ -56,7 +56,7 @@ if (isset($_GET['raceID'])) {
         $stmt->bindParam(':slug', $raceSlug, PDO::PARAM_STR);
         $stmt->execute();
         while ($row = $stmt->fetch()) {
-            $racerID = $row['racerRaceTimeID'];
+            $racerID = $row['racerRacetimeID'];
             $stmt2 = $pdo->prepare("SELECT racetimeName FROM racerinfo WHERE racetimeID = :racerID");
             $stmt2->bindParam(':racerID', $racerID, PDO::PARAM_STR);
             $stmt2->execute();

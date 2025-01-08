@@ -57,9 +57,9 @@ for($i=0;$i<$slugCount;$i++) {
         $stmt->execute([$slugList[$i]]);
         $raceExists = $stmt->fetchColumn();
         if(! $raceExists) {
-            if(substr($raceMode, 0, 7) == 'spoiler') {
+            if(substr($raceMode, 0, 7) == 'spoiler' || substr($raceMode, 0, 7) == 'Spoiler') {
                 $chatLog = 'https://racetime.gg/alttpr/' . $slugList[$i] . '.txt';
-                preg_match('/https:\/\/.+spoiler.+\.txt/', curlData($chatLog), $matches);
+                preg_match('/https://.+(s|S)poiler.+.(txt|json)/', curlData($chatLog), $matches);
                 $spoilerLink = $matches[0];
                 $raceIsSpoiler = 'y';
             } else {

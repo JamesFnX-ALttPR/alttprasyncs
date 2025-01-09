@@ -28,6 +28,20 @@ function curlData($s) {
     curl_setopt($ch, CURLOPT_URL, $s);
     curl_setopt($ch, CURLOPT_HEADER, 0);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    return curl_exec($ch);
+}
+
+function hCaptcha($response) {
+    $data = array(
+        'secret' => "ES_e984ba4ab5324376ada817c539ffa7b5",
+        'response' => $response
+    );
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, "https://hcaptcha.com/siteverify");
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     return curl_exec($ch);
 }
 
@@ -201,4 +215,8 @@ function unparseHash($str) {
     // Explode hash into array
     $strArray = explode('/', $str);
     return $strArray;
+}
+
+function createCallbackLink() {
+    return bin2hex(random_bytes(12));
 }

@@ -1,8 +1,8 @@
 <?php
 
-$racer1Name = $_POST['racer1Name'];
-$racer2Name = $_POST['racer2Name'];
-$teamName = $_POST['teamName'];
+$racer1Name = htmlentities($_POST['racer1Name'], ENT_COMPAT, "UTF-8");
+$racer2Name = htmlentities($_POST['racer2Name'], ENT_COMPAT, "UTF-8");
+$teamName = htmlentities($_POST['teamName'], ENT_COMPAT, "UTF-8");
 if(!isset($_POST['racer1Forfeit'])) { // Check if the forfeit box was left unchecked
     $teamForfeit = 'n';
     if($_POST['racer1RTHours'] != '' && $_POST['racer1RTMinutes'] != '' && $_POST['racer1RTSeconds'] != '') { // Validate time entry is correct (all three boxes filled out)

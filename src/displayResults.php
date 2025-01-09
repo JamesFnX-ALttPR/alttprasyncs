@@ -203,7 +203,7 @@ if($raceIsTeam == 'n') {
     $sql2->execute();
     while($teamRow = $sql2->fetch()) {
         $rowCount++;
-        $teamName = htmlentities($teamRow['teamName'], ENT_QUOTES, "UTF-8", false);
+        $teamName = $teamRow['teamName'];
         $teamAverageTime = round($teamRow['averageTime'], 0);
         if($checkCount > 0 && $teamRow['averageCR'] != null) {
             $teamAverageCR = round($teamRow['averageCR'], 0);

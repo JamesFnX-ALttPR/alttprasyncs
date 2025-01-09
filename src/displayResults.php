@@ -102,7 +102,7 @@ if($raceIsTeam == 'n') {
         $stmt2 = $pdo->prepare('SELECT racetimeName FROM racerinfo WHERE racetimeID = :racetimeID');
         $stmt2->bindValue(':racetimeID', $row['racerRacetimeID'], PDO::PARAM_STR);
         $stmt2->execute();
-        $racerName = $stmt2->fetchColumn();
+        $racerName = htmlentities($stmt2->fetchColumn(), ENT_COMPAT, "UTF-8", false);
         $rowCount++;
         if($rowCount % 2 == 0) {
             if($row['racerFromRacetime'] == 'n' && $raceFromRacetime == 'y') {
@@ -148,7 +148,7 @@ if($raceIsTeam == 'n') {
         $stmt2 = $pdo->prepare('SELECT racetimeName FROM racerinfo WHERE racetimeID = :racetimeID');
         $stmt2->bindValue(':racetimeID', $row['racerRacetimeID'], PDO::PARAM_STR);
         $stmt2->execute();
-        $racerName = $stmt2->fetchColumn();
+        $racerName = htmlentities($stmt2->fetchColumn(), ENT_COMPAT, "UTF-8", false);
         $rowCount++;
         if($rowCount % 2 == 0) {
             if($row['racerFromRacetime'] == 'n' && $raceFromRacetime == 'y') {
@@ -203,7 +203,7 @@ if($raceIsTeam == 'n') {
     $sql2->execute();
     while($teamRow = $sql2->fetch()) {
         $rowCount++;
-        $teamName = $teamRow['teamName'];
+        $teamName = htmlentities($teamRow['teamName'], ENT_QUOTES, "UTF-8", false);
         $teamAverageTime = round($teamRow['averageTime'], 0);
         if($checkCount > 0 && $teamRow['averageCR'] != null) {
             $teamAverageCR = round($teamRow['averageCR'], 0);
@@ -231,7 +231,7 @@ if($raceIsTeam == 'n') {
             $racerSQL = $pdo->prepare("SELECT racetimeName FROM racerinfo WHERE racetimeID = :racetimeID");
             $racerSQL->bindValue(':racetimeID', $row['racerRacetimeID'], PDO::PARAM_STR);
             $racerSQL->execute();
-            $racerName = $racerSQL->fetchColumn();
+            $racerName = htmlentities($racerSQL->fetchColumn(), ENT_COMPAT, "UTF-8", false);
             if($rowCount % 2 == 0) {
                 if($row['racerFromRacetime'] == 'n' && $raceFromRacetime == 'y') {
                     echo '                <tr class="even new">';
@@ -295,7 +295,7 @@ if($raceIsTeam == 'n') {
             $racerSQL = $pdo->prepare("SELECT racetimeName FROM racerinfo WHERE racetimeID = :racetimeID");
             $racerSQL->bindValue(':racetimeID', $row['racerRacetimeID'], PDO::PARAM_STR);
             $racerSQL->execute();
-            $racerName = $racerSQL->fetchColumn();
+            $racerName = htmlentities($racerSQL->fetchColumn(), ENT_COMPAT, "UTF-8", false);
             if($rowCount % 2 == 0) {
                 if($row['racerFromRacetime'] == 'n' && $raceFromRacetime == 'y') {
                     echo '                <tr class="even new">';

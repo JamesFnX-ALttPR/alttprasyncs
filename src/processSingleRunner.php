@@ -1,6 +1,6 @@
 <?php
 // Process the form submission for an individual runner
-$racerName = $_POST['racer1Name'];
+$racerName = htmlentities($_POST['racer1Name'], ENT_COMPAT, "UTF-8");
 if(!isset($_POST['racer1Forfeit'])) { // Check if the forfeit box was left unchecked
     $racerForfeit = 'n';
     if($_POST['racer1RTHours'] != '' && $_POST['racer1RTMinutes'] != '' && $_POST['racer1RTSeconds'] != '') { // Validate time entry is correct (all three boxes filled out)

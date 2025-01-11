@@ -385,5 +385,6 @@ h4 {
 }
 
 .invalid {
-    color: crimson;
+    color: white;
+    text-shadow: -1px 0 palevioletred, 0 1px palevioletred, 1px 0 palevioletred, 0 -1px palevioletred;
 }

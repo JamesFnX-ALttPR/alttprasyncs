@@ -1,6 +1,6 @@
 <?php 
 if($errorCondition != null) {
-    echo '        <div class="error">' . $errorCondition . ' - Please Try Again</div>' . PHP_EOL;
+    echo '        <div class="error">' . $errorCondition . 'Please Try Again</div>' . PHP_EOL;
     require_once ('../src/asyncPreForm.php');
     require_once ('../src/inputTeam.php');
 } else {

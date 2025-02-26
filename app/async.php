@@ -29,6 +29,7 @@ if(!isset($_GET['raceID'])) {
     $raceVODRequired = $row['vodRequired'];
     $raceLoginRequired = $row['loginRequired'];
     $raceLocked = $row['locked'];
+    $race_tournament = $row['tournament_seed'];
     $pageTitle = 'Submit Times for ' . $raceSlug;
 }
 require_once ('../includes/header.php');
@@ -43,8 +44,11 @@ if($submitted == 0) {
         require_once ('../src/displayResults.php');
     } else {
         if ($raceLoginRequired == 'y' && ! isset($_SESSION['userid'])) {
-        echo '        <div class="error">You must log in to submit or view results for this async.</div><br />' . PHP_EOL;
-        require_once ('../src/loginForm.php');
+            echo '        <div class="error">You must log in to submit or view results for this async.</div><br />' . PHP_EOL;
+            require_once ('../src/loginForm.php');
+        } elseif ($race_tournament == 'y' && ! isset($_SESSION['userid'])) {
+            echo '        <div class="error">You must log in to submit or view results for this async.</div><br />' . PHP_EOL;
+            require_once ('../src/loginForm.php');
         } else {
             require_once ('../src/asyncPreForm.php');
             if($raceIsTeam == 'y') {

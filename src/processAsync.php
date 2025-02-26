@@ -1,6 +1,6 @@
 <?php
 
-//Variables passed from form: seed (required), mode (required). hash1-5 (required), description, spoiler, spoilerLog, team, loginRequired, vodRequired, editDisallowed
+//Variables passed from form: seed (required), mode (required). hash1-5 (required), description, spoiler, spoilerLog, team, loginRequired, vodRequired, editDisallowed, tournament_seed
 //Process form input and output errors or confirmation screen
 
 $errors = null; //Set error variable to empty, check for errors at the end
@@ -62,6 +62,11 @@ if (isset($_POST['editDisallowed'])) {
 } else {
     $newAllowResultEdits = 'y';
 }
+if (isset($_POST['tournament_seed'])) {
+    $newtournament_seed = 'y';
+} else {
+    $newtournament_seed = 'n';
+}
 
 // Check if seed exists in DB, stop and write errors if so
 $stmt = $pdo->prepare("SELECT id FROM races WHERE raceSeed = :raceSeed");
@@ -122,6 +127,13 @@ if ($errors != null) {
             $toggleModes .= 'Edits Disallowed';
         }
     }
+    if ($newtournament_seed == 'y') {
+        if ($toggleModes) {
+            $toggleModes .= ' - Tournament Seed';
+        } else {
+            $toggleModes .= 'Tournament Seed';
+        }
+    }
         if ($toggleModes != '') {
         echo '                <tr><td colspan="2" class="centerAlign">' . $toggleModes . '</td></tr>' . PHP_EOL;
     }
@@ -146,6 +158,9 @@ if ($errors != null) {
     }
     if ($newAllowResultEdits == 'n') {
         echo '<input type="hidden" id="newVODRequired" name="newAllowResultEdits" value="' . $newAllowResultEdits . '" />';
+    }
+    if ($newtournament_seed == 'y') {
+        echo '<input type="hidden" id="newtournament_seed" name="newtournament_seed" value="' . $newtournament_seed . '" />';
     }
     echo '</td></tr>' . PHP_EOL;
     echo '            </tbody>' . PHP_EOL;

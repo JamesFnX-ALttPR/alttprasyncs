@@ -4,6 +4,8 @@ echo '            <tbody>' . PHP_EOL;
 echo '                <tr><td><label for="racer1Name" title="If you have races on Racetime, your name will autocomplete.">Your Name: </label></td><td><input list="racers" id="racer1Name" name="racer1Name" required';
 if(isset($racerName)) {
     echo ' value="' . $racerName . '"';
+} elseif (isset($_SESSION['displayName'])) {
+    echo ' value="' . $_SESSION['displayName'] . '"';
 }
 echo ' />' . PHP_EOL;
 echo '                    <datalist id="racers">' . PHP_EOL;

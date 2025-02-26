@@ -1,7 +1,12 @@
-<?php // Generate team information in temp table
- // Drop old information from table
-$sql = "TRUNCATE TABLE results_temp";
-$pdo->prepare($sql)->execute();
+<?php // Generate team information in temp table - getting $tempTableHash from page
+
+// Create table for results
+require_once ('../includes/functions.php');
+require_once ('../config/settings.php');
+$sql = "CREATE TABLE IF NOT EXISTS temp_" . $tempTableHash . " (teamName varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL, averageTime mediumint DEFAULT NULL, averageIGT mediumint DEFAULT NULL, averageCR smallint DEFAULT NULL, teamForfeit varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;";
+$stmt = $pdo->prepare($sql);
+$stmt->execute();
+
 
 // Get list of teams in a race
 $stmt = $pdo->prepare("SELECT DISTINCT racerTeam FROM results WHERE raceSlug = ?");
@@ -19,13 +24,14 @@ while($row = $stmt->fetch()) {
         }
     }
     if($teamForfeit == 'y') { // Mark team as forfeitted if any player did
-        $stmt3 = $pdo->prepare("INSERT INTO results_temp (teamName, teamForfeit) VALUES (?, 'y')");
+        $sql3 = "INSERT INTO temp_" . $tempTableHash . " (teamName, teamForfeit) VALUES (?, 'y')";
+        $stmt3 = $pdo->prepare($sql3);
         $stmt3->execute([$racerTeam]);
     } else { // Get average times and collection rate if no player forfeitted
         $stmt3 = $pdo->prepare("SELECT AVG(racerRealTime) FROM results WHERE raceSlug = ? AND racerTeam = ?");
         $stmt3->execute([$raceSlug, $racerTeam]);
         $teamAverage = $stmt3->fetchColumn();
-        $sqlTemp = "INSERT INTO results_temp (teamForfeit, teamName, averageTime";
+        $sqlTemp = "INSERT INTO temp_" . $tempTableHash . " (teamForfeit, teamName, averageTime";
         $variableCount = 2;
         $crGather = 'n';
         if($checkCount > 0) {

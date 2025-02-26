@@ -11,6 +11,8 @@ echo '                <tr><td></td><td><label for="racer1Name">Player 1</label><
 echo '                <tr><td><label title="If you have races on Racetime, your name will autocomplete.">Racer Names: </label></td><td><input list="racers" id="racer1Name" name="racer1Name" required ';
 if(isset($_POST['racer1Name'])) {
     echo 'value="' . $_POST['racer1Name'] . '" ';
+} elseif (isset($_SESSION['displayName'])) {
+    echo ' value="' . $_SESSION['displayName'] . '"';
 }
 echo '/></td><td><input list="racers" id="racer2Name" name="racer2Name" required ';
 if(isset($_POST['racer2Name'])) {

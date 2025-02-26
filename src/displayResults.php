@@ -179,6 +179,7 @@ if($raceIsTeam == 'n') {
         echo '</tr>' . PHP_EOL;
     }
 } else {
+    $tempTableHash = createCallbackLink();
     require_once ('../src/populateTempTable.php');
     echo '            <thead>' . PHP_EOL;
     echo '                <tr><th>Place</th><th>Name</th><th>Real Time</th>';
@@ -199,7 +200,8 @@ if($raceIsTeam == 'n') {
     echo '            <tbody>' . PHP_EOL;
     $sql = $sql . " FROM results WHERE raceSlug = :raceSlug AND racerTeam = :racerTeam ORDER BY racerRealTime";
     $rowCount = 0;
-    $sql2 = $pdo->prepare("SELECT teamName, averageTime, averageCR FROM results_temp WHERE teamForfeit = 'n' ORDER BY averageTime");
+    $stmt2 = "SELECT teamName, averageTime, averageCR FROM temp_" . $tempTableHash . " WHERE teamForfeit = 'n' ORDER BY averageTime";
+    $sql2 = $pdo->prepare($stmt2);
     $sql2->execute();
     while($teamRow = $sql2->fetch()) {
         $rowCount++;
@@ -269,7 +271,8 @@ if($raceIsTeam == 'n') {
             echo '</tr>' . PHP_EOL;
         }
     }
-    $sql2 = $pdo->prepare("SELECT teamName FROM results_temp WHERE teamForfeit = 'y' ORDER BY teamName");
+    $stmt2 = "SELECT teamName FROM temp_" . $tempTableHash . " WHERE teamForfeit = 'y' ORDER BY teamName";
+    $sql2 = $pdo->prepare($stmt2);
     $sql2->execute();
     while($teamRow = $sql2->fetch()) {
         $rowCount++;
@@ -325,6 +328,9 @@ if($raceIsTeam == 'n') {
             echo PHP_EOL;
         }
     }
+    $sql = "DROP TABLE temp_" . $tempTableHash;
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
 }
 if (isset($_SESSION['userid'])) {
     if($_SESSION['userid'] == $raceCreatedBy) {

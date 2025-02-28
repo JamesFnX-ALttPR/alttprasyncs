@@ -34,6 +34,9 @@ echo '                    <tr><th class="rightAlign"><label for="loginRequired" 
 echo '                    <tr><th class="rightAlign"><label for="vodRequired" title="Check here if a VOD link will be required to submit a result.">VOD Required?</label> </th><td><input type="checkbox" id="vodRequired" name="vodRequired" value="y" '; if ($vodRequired == 'y') { echo 'checked '; } echo '/></td></tr>' . PHP_EOL;
 echo '                    <tr><th class="rightAlign"><label for="editDisallowed" title="Check here if you would like users to not be able to edit their result submissions after entering them.">Disallow Edits?</label> </th><td><input type="checkbox" id="editDisallowed" name="editDisallowed" value="y" '; if ($allowResultEdits == 'n') { echo 'checked '; } echo '/></td></tr>' . PHP_EOL;
 echo '                    <tr><th class="rightAlign"><label for="locked" title="Check here if you would like to lock this async and not allow further results to be submitted until you unlock it.">Lock Async?</label> </th><td><input type="checkbox" id="locked" name="locked" value="y" '; if ($locked == 'y') { echo 'checked '; } echo '/></td></tr>' . PHP_EOL;
+if ($tournament == 'y') {
+    echo '                    <tr><td colspan="2" class="centerAlign">This is a tournament restricted async. Locking the async will make results available for everyone.<br />You will <span style="font-weight: bold;">NOT</span> be able to return this async to tournament mode.</td></tr><input type="hidden" id="tournament" name="tournament" value="y" />' . PHP_EOL;
+}
 echo '                    <tr><td class="submitButton"><input type="Submit" class="submitButton" value="Save Changes" /></td><td class="submitButton"><a href="' . $domain . '/yourasyncs' . '" class="fakeButton">Go Back</a></td></tr>' . PHP_EOL;
 echo '                </tbody>' . PHP_EOL;
 echo '            </table>' . PHP_EOL;

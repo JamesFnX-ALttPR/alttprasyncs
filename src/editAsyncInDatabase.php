@@ -51,6 +51,13 @@ if (isset($_POST['locked'])) {
 } else {
     $raceLocked = 'n';
 }
+if (isset($_POST['tournament']) && $raceLocked == 'y') {
+    $tournament = 'n';
+} elseif (isset($_POST['tournament'])) {
+    $tournament = 'y';
+} else {
+    $tournament = 'n';
+}
 
 $errors = null; //Set error variable to empty, check for errors at the end
 if (! filter_var($raceSeed, FILTER_VALIDATE_URL)) { //Check if seed URL is a valid URL
@@ -63,7 +70,7 @@ if (! filter_var($raceSpoilerLog, FILTER_VALIDATE_URL) && $raceSpoiler == 'y') {
 if ($errors != '') {
     echo '        <div class="error">' . $errors . '</div>' . PHP_EOL;
 } else {
-    $stmt = $pdo->prepare("UPDATE races SET raceMode = :raceMode, raceSeed = :raceSeed, raceHash = :raceHash, raceDescription = :raceDescription, raceIsTeam = :raceIsTeam, raceIsSpoiler = :raceIsSpoiler, raceSpoilerLink = :raceSpoilerLink, vodRequired = :vodRequired, loginRequired = :loginRequired, allowResultEdits = :allowResultEdits, locked = :locked WHERE id = :id");
+    $stmt = $pdo->prepare("UPDATE races SET raceMode = :raceMode, raceSeed = :raceSeed, raceHash = :raceHash, raceDescription = :raceDescription, raceIsTeam = :raceIsTeam, raceIsSpoiler = :raceIsSpoiler, raceSpoilerLink = :raceSpoilerLink, vodRequired = :vodRequired, loginRequired = :loginRequired, allowResultEdits = :allowResultEdits, locked = :locked, tournament_seed = :tournament WHERE id = :id");
     $stmt->bindValue(':raceMode', $raceMode, PDO::PARAM_STR);
     $stmt->bindValue(':raceSeed', $raceSeed, PDO::PARAM_STR);
     $stmt->bindValue(':raceHash', $raceHash, PDO::PARAM_STR);
@@ -75,6 +82,7 @@ if ($errors != '') {
     $stmt->bindValue(':loginRequired', $raceLoginRequired, PDO::PARAM_STR);
     $stmt->bindValue(':allowResultEdits', $raceAllowResultEdits, PDO::PARAM_STR);
     $stmt->bindValue(':locked', $raceLocked, PDO::PARAM_STR);
+    $stmt->bindParam(':tournament', $tournament, PDO::PARAM_STR);
     $stmt->bindValue(':id', $raceID, PDO::PARAM_INT);
     $stmt->execute();
 
@@ -125,6 +133,13 @@ if ($errors != '') {
             $toggleModes .= ' - Locked - No New Results Allowed';
         } else {
             $toggleModes .= 'Locked - No New Results Allowed';
+        }
+    }
+    if ($$tournament == 'y') {
+        if ($toggleModes != '') {
+            $toggleModes .= ' - Tournament Async';
+        } else {
+            $toggleModes .= 'Tournament Async';
         }
     }
     if ($toggleModes != '') {

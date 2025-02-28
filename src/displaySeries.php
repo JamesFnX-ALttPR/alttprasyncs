@@ -40,6 +40,7 @@ if ($memberArray[0] != null) {
         $raceIsSpoiler = $row['raceIsSpoiler'];
         $raceSpoilerLink = $row['raceSpoilerLink'];
         $raceFromRacetime = $row['raceFromRacetime'];
+        $raceTournament = $row['tournament_seed'];
         if($raceIsTeam == 'y') {
             $raceDescription = 'CO-OP/TEAM - ' . $raceDescription;
             $teamCountSQL = $pdo->prepare("SELECT COUNT(DISTINCT racerTeam) FROM results WHERE raceSlug = ?");
@@ -65,7 +66,7 @@ if ($memberArray[0] != null) {
         if ($raceFromRacetime == 'y') {
             echo '</a>';
         }
-        echo '</td><td><a target="_blank" href="' . $raceSeed . '">Download Seed</a></td><td>' . hashToImages($raceHash) . '</td><td>' . $participantCount . '<td><a href="' . $domain . '/async/' . $raceID . '">Submit Async</a></td><td><a href="' . $domain . '/results/' . $raceID . '">View Results</a></td></tr>' . PHP_EOL;        
+        echo '</td><td>'; if ($raceTournament == 'y') { echo 'Tournament Async'; } else { echo '<a target="_blank" href="' . $raceSeed . '">Download Seed</a>'; } echo '</td><td>' . hashToImages($raceHash) . '</td><td>' . $participantCount . '<td><a href="' . $domain . '/async/' . $raceID . '">Submit Async</a></td><td><a href="' . $domain . '/results/' . $raceID . '">View Results</a></td></tr>' . PHP_EOL;
     }
 }
 ?>

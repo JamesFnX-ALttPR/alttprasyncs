@@ -49,6 +49,7 @@ if (is_post_request()) {
     $loginRequired = $row['loginRequired'];
     $allowResultEdits = $row['allowResultEdits'];
     $locked = $row['locked'];
+    $tournament = $row['tournament_seed'];
     $createdBy = $row['createdBy'];
     // Make sure this user can edit this race
     if ($isAdmin == 'n' && $createdBy != $_SESSION['userid']) {

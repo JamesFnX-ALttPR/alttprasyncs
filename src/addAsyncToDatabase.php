@@ -1,6 +1,6 @@
 <?php
 
-// Variables from processAsync - newSeed, newMode, newHash, newSpoiler (newSpoilerLog), newTeam, newLoginRequired, newVODRequired
+// Variables from processAsync - newSeed, newMode, newHash, newSpoiler (newSpoilerLog), newTeam, newLoginRequired, newVODRequired, newtournament_mode
 
 $newSeed = $_POST['newSeed'];
 $newMode = $_POST['newMode'];
@@ -40,6 +40,11 @@ if (isset($_POST['newAllowResultEdits'])) {
 } else {
     $newAllowResultEdits = 'y';
 }
+if (isset($_POST['newtournament_seed'])) {
+    $newtournament_seed = 'y';
+} else {
+    $newtournament_seed = 'n';
+}
 
 $newCreatedBy = $_SESSION['userid'];
 
@@ -57,7 +62,7 @@ while (1 == 1) {
     }
 }
 
-$stmt = $pdo->prepare("INSERT INTO races (raceSlug, raceStart, raceMode, raceSeed, raceHash, raceDescription, raceIsTeam, raceIsSpoiler, raceSpoilerLink, raceFromRacetime, vodRequired, loginRequired, allowResultEdits, createdBy) VALUES (:raceSlug, NOW(), :raceMode, :raceSeed, :raceHash, :raceDescription, :raceIsTeam, :raceIsSpoiler, :raceSpoilerLink, 'n', :vodRequired, :loginRequired, :allowResultEdits, :createdBy)");
+$stmt = $pdo->prepare("INSERT INTO races (raceSlug, raceStart, raceMode, raceSeed, raceHash, raceDescription, raceIsTeam, raceIsSpoiler, raceSpoilerLink, raceFromRacetime, vodRequired, loginRequired, allowResultEdits, tournament_seed, createdBy) VALUES (:raceSlug, NOW(), :raceMode, :raceSeed, :raceHash, :raceDescription, :raceIsTeam, :raceIsSpoiler, :raceSpoilerLink, 'n', :vodRequired, :loginRequired, :allowResultEdits, :tournament, :createdBy)");
 $stmt->bindValue(':raceSlug', $newSlug, PDO::PARAM_STR);
 $stmt->bindValue(':raceMode', $newMode, PDO::PARAM_STR);
 $stmt->bindValue(':raceSeed', $newSeed, PDO::PARAM_STR);
@@ -69,6 +74,7 @@ $stmt->bindValue(':raceSpoilerLink', $newSpoilerLog, PDO::PARAM_STR);
 $stmt->bindValue(':vodRequired', $newVODRequired, PDO::PARAM_STR);
 $stmt->bindValue(':loginRequired', $newLoginRequired, PDO::PARAM_STR);
 $stmt->bindValue(':allowResultEdits', $newAllowResultEdits, PDO::PARAM_STR);
+$stmt->bindParam(':tournament', $newtournament_seed, PDO::PARAM_STR);
 $stmt->bindValue(':createdBy', $newCreatedBy, PDO::PARAM_INT);
 $stmt->execute();
 
@@ -116,6 +122,13 @@ if ($newAllowResultEdits == 'n') {
         $toggleModes .= ' - Edits Disallowed';
     } else {
         $toggleModes .= 'Edits Disallowed';
+    }
+}
+if ($newtournament_seed == 'y') {
+    if ($toggleModes) {
+        $toggleModes .= ' - Tournament Seed';
+    } else {
+        $toggleModes .= 'Tournament Seed';
     }
 }
 if ($toggleModes != '') {

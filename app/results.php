@@ -32,6 +32,7 @@ if(!isset($_GET['raceID'])) {
     $raceFromRacetime = $row['raceFromRacetime'];
     $raceVODRequired = $row['vodRequired'];
     $raceLoginRequired = $row['loginRequired'];
+    $tourney_seed = $row['tournament_seed'];
     $raceCreatedBy = $row['createdBy'];
     $pageTitle = 'View Times for ' . $raceSlug;
     if (is_post_request() && $_SESSION['userid'] == $raceCreatedBy) {
@@ -94,9 +95,21 @@ if(!isset($_GET['raceID'])) {
     }
 }
 require_once ('../includes/header.php');
-if ($raceLoginRequired == 'y' && ! isset($_SESSION['userid'])) {
+if ($raceLoginRequired == 'y' && ! isset($_SESSION['userid'])) { // If login is required and the user isn't logged in, bring up the login form
     echo '        <div class="error">You must log in to submit or view results for this async.</div><br />' . PHP_EOL;
     include ('../src/loginForm.php');
+} elseif ($tourney_seed == 'y' && ! isset($_SESSION['userid'])) { // If it's a tournament seed and the user isn't logged in, bring up the login form
+    echo '        <div class="error">You must log in to submit or view results for this async.</div><br />' . PHP_EOL;
+    include ('../src/loginForm.php');
+} elseif ($tourney_seed == 'y'&& $raceCreatedBy != $_SESSION['userid']) { // If it's a tournament seed and the logged in user isn't the creator, check to see if the user has submitted a time
+    $stmt = $pdo->prepare('SELECT COUNT(id) FROM results WHERE raceSlug = :slug AND enteredBy = :id');
+    $stmt->bindParam(':slug', $raceSlug, PDO::PARAM_STR);
+    $stmt->bindParam(':id', $_SESSION['userid'], PDO::PARAM_INT);
+    $stmt->execute();
+    $rslt = $stmt->fetchColumn();
+    if (!$rslt) {
+        echo '        <div class="error">Only racers who have submitted a result may view results for this async.<br />Click <a href="' . $domain . '/async/' . $raceID . '">here</a> to submit a result.</div><br />' . PHP_EOL;
+    }
 } else {
     require_once ('../src/displayResults.php');
 }

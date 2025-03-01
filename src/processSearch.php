@@ -298,6 +298,7 @@ if ($searchTerm == '' && $searchHash == '') {
             $stmt->bindValue(':raceHash', $searchHash, PDO::PARAM_STR);
             $stmt->execute();
         }
+        $rowCounter = 0;
         while($row = $stmt->fetch()) {
             $rowCounter++;
             if($rowCounter % 2 == 0) {

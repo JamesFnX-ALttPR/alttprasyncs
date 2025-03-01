@@ -332,7 +332,7 @@ if($raceIsTeam == 'n') {
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
 }
-if (isset($_SESSION['userid'])) {
+if (isset($_SESSION['userid']) && isset($raceCreatedBy)) {
     if($_SESSION['userid'] == $raceCreatedBy) {
         echo '                <tr><td colspan="3" class="submitButton"><form method="post" action=""><input type="Submit" class="submitButton" value="Download Results as .CSV" /></form></td></tr>' . PHP_EOL;
     }

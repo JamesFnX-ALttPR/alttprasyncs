@@ -7,7 +7,13 @@ $sql = "CREATE TABLE IF NOT EXISTS temp_" . $tempTableHash . " (teamName varchar
 $stmt = $pdo->prepare($sql);
 $stmt->execute();
 
-
+// Determine if this is a Duality race (where we'll sort by last finish instead of average finish)
+$duality_regex = '/.*\/duality$/';
+if (preg_match($duality_regex, $raceMode)) {
+    $duality = 'y';
+} else {
+    $duality = 'n';
+}
 // Get list of teams in a race
 $stmt = $pdo->prepare("SELECT DISTINCT racerTeam FROM results WHERE raceSlug = ?");
 $stmt->execute([$raceSlug]);
@@ -27,31 +33,59 @@ while($row = $stmt->fetch()) {
         $sql3 = "INSERT INTO temp_" . $tempTableHash . " (teamName, teamForfeit) VALUES (?, 'y')";
         $stmt3 = $pdo->prepare($sql3);
         $stmt3->execute([$racerTeam]);
-    } else { // Get average times and collection rate if no player forfeitted
-        $stmt3 = $pdo->prepare("SELECT AVG(racerRealTime) FROM results WHERE raceSlug = ? AND racerTeam = ?");
-        $stmt3->execute([$raceSlug, $racerTeam]);
-        $teamAverage = $stmt3->fetchColumn();
-        $sqlTemp = "INSERT INTO temp_" . $tempTableHash . " (teamForfeit, teamName, averageTime";
-        $variableCount = 2;
-        $crGather = 'n';
-        if($checkCount > 0) {
-            $stmt3 = $pdo->prepare("SELECT AVG(racerCheckCount) FROM results WHERE raceSlug = ? AND racerTeam = ? AND racerCheckCount IS NOT NULL");
+    } else { // Get average times or last times and collection rate if no player forfeitted
+        if ($duality == 'n') {
+            $stmt3 = $pdo->prepare("SELECT AVG(racerRealTime) FROM results WHERE raceSlug = ? AND racerTeam = ?");
             $stmt3->execute([$raceSlug, $racerTeam]);
-            $teamCRAverage = $stmt3->fetchColumn();
-            $sqlTemp = $sqlTemp . ", averageCR";
-            $variableCount++;
-            $crGather = 'y';
-        }
-        $sqlTemp = $sqlTemp . ") VALUES ('n', ?, ?";
-        if($variableCount == 2) {
-            $sqlTemp = $sqlTemp . ")";
-            $stmt3 = $pdo->prepare($sqlTemp);
-            $stmt3->execute([$racerTeam, $teamAverage]);
-        }
-        else {
-            $sqlTemp = $sqlTemp . ", ?)";
-            $stmt3 = $pdo->prepare($sqlTemp);
-            $stmt3->execute([$racerTeam, $teamAverage, $teamCRAverage]);
+            $teamAverage = $stmt3->fetchColumn();
+            $sqlTemp = "INSERT INTO temp_" . $tempTableHash . " (teamForfeit, teamName, averageTime";
+            $variableCount = 2;
+            $crGather = 'n';
+            if($checkCount > 0) {
+                $stmt3 = $pdo->prepare("SELECT AVG(racerCheckCount) FROM results WHERE raceSlug = ? AND racerTeam = ? AND racerCheckCount IS NOT NULL");
+                $stmt3->execute([$raceSlug, $racerTeam]);
+                $teamCRAverage = $stmt3->fetchColumn();
+                $sqlTemp = $sqlTemp . ", averageCR";
+                $variableCount++;
+                $crGather = 'y';
+            }
+            $sqlTemp = $sqlTemp . ") VALUES ('n', ?, ?";
+            if($variableCount == 2) {
+                $sqlTemp = $sqlTemp . ")";
+                $stmt3 = $pdo->prepare($sqlTemp);
+                $stmt3->execute([$racerTeam, $teamAverage]);
+            }
+            else {
+                $sqlTemp = $sqlTemp . ", ?)";
+                $stmt3 = $pdo->prepare($sqlTemp);
+                $stmt3->execute([$racerTeam, $teamAverage, $teamCRAverage]);
+            }
+        } else {
+            $stmt3 = $pdo->prepare("SELECT racerRealTime FROM results WHERE raceSlug = ? AND racerTeam = ? ORDER BY racerRealTime DESC LIMIT 1");
+            $stmt3->execute([$raceSlug, $racerTeam]);
+            $teamAverage = $stmt3->fetchColumn();
+            $sqlTemp = "INSERT INTO temp_" . $tempTableHash . " (teamForfeit, teamName, averageTime";
+            $variableCount = 2;
+            $crGather = 'n';
+            if($checkCount > 0) {
+                $stmt3 = $pdo->prepare("SELECT AVG(racerCheckCount) FROM results WHERE raceSlug = ? AND racerTeam = ? AND racerCheckCount IS NOT NULL");
+                $stmt3->execute([$raceSlug, $racerTeam]);
+                $teamCRAverage = $stmt3->fetchColumn();
+                $sqlTemp = $sqlTemp . ", averageCR";
+                $variableCount++;
+                $crGather = 'y';
+            }
+            $sqlTemp = $sqlTemp . ") VALUES ('n', ?, ?";
+            if($variableCount == 2) {
+                $sqlTemp = $sqlTemp . ")";
+                $stmt3 = $pdo->prepare($sqlTemp);
+                $stmt3->execute([$racerTeam, $teamAverage]);
+            }
+            else {
+                $sqlTemp = $sqlTemp . ", ?)";
+                $stmt3 = $pdo->prepare($sqlTemp);
+                $stmt3->execute([$racerTeam, $teamAverage, $teamCRAverage]);
+            }
         }
     }
 }

@@ -27,7 +27,11 @@ while ($row = $stmt->fetch()) {
     $raceSpoilerLink = $row['raceSpoilerLink'];
     $raceFromRacetime = $row['raceFromRacetime'];
     if($raceIsTeam == 'y') {
-        $raceDescription = 'CO-OP/TEAM - ' . $raceDescription;
+        if ($raceDescription != '') {
+            $raceDescription = 'CO-OP/TEAM - ' . $raceDescription;
+        } else {
+            $raceDescription = 'CO-OP/TEAM';
+        }
         $teamCountSQL = $pdo->prepare("SELECT COUNT(DISTINCT racerTeam) FROM results WHERE raceSlug = ?");
         $teamCountSQL->execute([$raceSlug]);
         $participantCount = $teamCountSQL->fetchColumn();

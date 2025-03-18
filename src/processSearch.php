@@ -55,6 +55,9 @@ if (isset($_POST['excludeRunner'])) {
 if (isset($_POST['raceType'])) {
     $raceType = $_POST['raceType'];
 }
+if (isset($_POST['filter_coop'])) {
+    $filter_coop = $_POST['filter_coop'];
+}
 if ($searchTerm == '' && $searchHash == '') {
     echo '        <div class="error">You must search for a term or a full hash. Please try again.</div>' . PHP_EOL;
     include('../src/selectJS.php');
@@ -90,6 +93,13 @@ if ($searchTerm == '' && $searchHash == '') {
                 $searchQuery .= " AND raceFromRacetime = 'n'";
             }
         }
+        if (isset($filter_coop)) {
+            if ($filter_coop == 'solo') {
+                $searchQuery .= " AND raceIsTeam = 'n'";
+            } elseif ($filter_coop == 'coop') {
+                $searchQuery .= " AND raceIsTeam = 'y'";
+            }
+        }
         $searchQuery .= " ORDER BY raceStart DESC";
         $stmt = $pdo->prepare($searchQuery);
         $stmt->bindValue(':raceMode', $searchTerm, PDO::PARAM_STR);
@@ -114,6 +124,13 @@ if ($searchTerm == '' && $searchHash == '') {
                 $searchQuery .= " AND raceFromRacetime = 'n'";
             }
         }
+        if (isset($filter_coop)) {
+            if ($filter_coop == 'solo') {
+                $searchQuery .= " AND raceIsTeam = 'n'";
+            } elseif ($filter_coop == 'coop') {
+                $searchQuery .= " AND raceIsTeam = 'y'";
+            }
+        }
         $searchQuery .= " ORDER BY raceStart DESC";
         $stmt = $pdo->prepare($searchQuery);
         $stmt->bindValue(':raceMode', $searchTerm, PDO::PARAM_STR);
@@ -135,6 +152,13 @@ if ($searchTerm == '' && $searchHash == '') {
                 $searchQuery .= " AND raceFromRacetime = 'y'";
             } elseif ($raceType == 'custom') {
                 $searchQuery .= " AND raceFromRacetime = 'n'";
+            }
+        }
+        if (isset($filter_coop)) {
+            if ($filter_coop == 'solo') {
+                $searchQuery .= " AND raceIsTeam = 'n'";
+            } elseif ($filter_coop == 'coop') {
+                $searchQuery .= " AND raceIsTeam = 'y'";
             }
         }
         $searchQuery .= " ORDER BY raceStart DESC";
@@ -178,7 +202,7 @@ if ($searchTerm == '' && $searchHash == '') {
         echo '            <table class="searchRefine">' . PHP_EOL;
         echo '                <caption>Refine Your Search</caption>' . PHP_EOL;
         echo '                <thead>' . PHP_EOL;
-        echo '                    <tr><th><label for="includeRunner">Include Runner</label></th><th><label for="excludeRunner">Exclude Runner</label></th><th><label for="raceType">Types of Races</label></th><th><label>Change Date Range</label></th></tr>' . PHP_EOL;
+        echo '                    <tr><th><label for="includeRunner">Include Runner</label></th><th><label for="excludeRunner">Exclude Runner</label></th><th><label for="raceType">Types of Races</label></th><th><label for="filter_coop">Filter Co-Op</th><th><label>Change Date Range</label></th></tr>' . PHP_EOL;
         echo '                </thead>' . PHP_EOL . '                <tbody>' . PHP_EOL;
         echo '                    <tr><td><select class="js-example-basic-single" id="includeRunner" name="includeRunner" form="refineSearch">' . PHP_EOL;
         echo '                        <option value=""></option>' . PHP_EOL;
@@ -198,7 +222,7 @@ if ($searchTerm == '' && $searchHash == '') {
             }
             echo '>' . $name . '</option>' . PHP_EOL;
         }
-        echo '                     </select></td><td><input type="radio" id="raceType1" name="raceType" value="racetime" /> <label for="raceType1">Racetime Races Only</label><br /><input type="radio" id="raceType2" name="raceType" value="custom" /> <label for="raceType2">Custom Asyncs Only</label><br /><input type="radio" id="raceType3" name="raceType" value="both" checked /> <label for="raceType3">All Races</label></td><td><label for="startDate">From:</label> <input type="date" id="startDate" name="startDate" min="2022-02-21" max="' . date("Y-m-d") . '"';
+        echo '                     </select></td><td><input type="radio" id="raceType1" name="raceType" value="racetime" /> <label for="raceType1">Racetime Races Only</label><br /><input type="radio" id="raceType2" name="raceType" value="custom" /> <label for="raceType2">Custom Asyncs Only</label><br /><input type="radio" id="raceType3" name="raceType" value="both" checked /> <label for="raceType3">All Races</label></td><td><input type="radio" id="filter_coop1" name="filter_coop" value="solo" /> <label for="filter_coop1">Solo Races Only</label><br /><input type="radio" id="filter_coop2" name="filter_coop" value="coop" /> <label for="filter_coop2">Co-Op Races Only</label><br /><input type="radio" id="filter_coop3" name="filter_coop" value="all" checked /> <label for="filter_coop3">All Races</label></td><td><label for="startDate">From:</label> <input type="date" id="startDate" name="startDate" min="2022-02-21" max="' . date("Y-m-d") . '"';
         if (isset($startDate)) {
             echo ' value="' . $startDate . '"';
         }
@@ -207,7 +231,7 @@ if ($searchTerm == '' && $searchHash == '') {
             echo ' value="' . $endDate . '"';
         }
         echo ' /></div></td></tr>' . PHP_EOL;
-        echo '                     <tr><td colspan="4" class="submitButton"><input type="Submit" class="submitButton" value="Refine Search" /></td></tr>' . PHP_EOL;
+        echo '                     <tr><td colspan="5" class="submitButton"><input type="Submit" class="submitButton" value="Refine Search" /></td></tr>' . PHP_EOL;
         echo '                 </tbody>' . PHP_EOL;
         echo '             </table>' . PHP_EOL;
         echo '             <input type="hidden" id="searchBox" name="searchBox" value="' . $searchTerm . '" />';
@@ -246,6 +270,13 @@ if ($searchTerm == '' && $searchHash == '') {
                     $searchQuery .= " AND raceFromRacetime = 'n'";
                 }
             }
+            if (isset($filter_coop)) {
+                if ($filter_coop == 'solo') {
+                    $searchQuery .= " AND raceIsTeam = 'n'";
+                } elseif ($filter_coop == 'coop') {
+                    $searchQuery .= " AND raceIsTeam = 'y'";
+                }
+            }
             $searchQuery .= " ORDER BY raceStart DESC";
             $stmt = $pdo->prepare($searchQuery);
             $stmt->bindValue(':raceMode', $searchTerm, PDO::PARAM_STR);
@@ -270,6 +301,13 @@ if ($searchTerm == '' && $searchHash == '') {
                     $searchQuery .= " AND raceFromRacetime = 'n'";
                 }
             }
+            if (isset($filter_coop)) {
+                if ($filter_coop == 'solo') {
+                    $searchQuery .= " AND raceIsTeam = 'n'";
+                } elseif ($filter_coop == 'coop') {
+                    $searchQuery .= " AND raceIsTeam = 'y'";
+                }
+            }
             $searchQuery .= " ORDER BY raceStart DESC";
             $stmt = $pdo->prepare($searchQuery);
             $stmt->bindValue(':raceMode', $searchTerm, PDO::PARAM_STR);
@@ -291,6 +329,13 @@ if ($searchTerm == '' && $searchHash == '') {
                     $searchQuery .= " AND raceFromRacetime = 'y'";
                 } elseif ($raceType == 'custom') {
                     $searchQuery .= " AND raceFromRacetime = 'n'";
+                }
+            }
+            if (isset($filter_coop)) {
+                if ($filter_coop == 'solo') {
+                    $searchQuery .= " AND raceIsTeam = 'n'";
+                } elseif ($filter_coop == 'coop') {
+                    $searchQuery .= " AND raceIsTeam = 'y'";
                 }
             }
             $searchQuery .= " ORDER BY raceStart DESC";
@@ -318,7 +363,11 @@ if ($searchTerm == '' && $searchHash == '') {
             $raceSpoilerLink = $row['raceSpoilerLink'];
             $raceFromRacetime = $row['raceFromRacetime'];
             if($raceIsTeam == 'y') {
-                $raceDescription = 'CO-OP/TEAM - ' . $raceDescription;
+                if ($raceDescription != '') {
+                    $raceDescription = 'CO-OP/TEAM - ' . $raceDescription;
+                } else {
+                    $raceDescription = 'CO-OP/TEAM';
+                }
                 $teamCountSQL = $pdo->prepare("SELECT COUNT(DISTINCT racerTeam) FROM results WHERE raceSlug = ?");
                 $teamCountSQL->execute([$raceSlug]);
                 $participantCount = $teamCountSQL->fetchColumn();

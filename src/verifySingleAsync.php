@@ -10,7 +10,7 @@ if($errorCondition != null) {
     echo '                <caption>Confirm Results Submission</caption>' . PHP_EOL;
     echo '            </thead>' . PHP_EOL;
     echo '            <tbody>' . PHP_EOL;
-    $stmt = $pdo->prepare("SELECT * FROM racerinfo WHERE racetimeName = :name");
+    $stmt = $pdo->prepare("SELECT * FROM racerinfo WHERE rtgg_name = :name");
     $stmt->bindParam(':name', $racerName, PDO::PARAM_STR);
     $stmt->execute();
     $row = $stmt->fetch();
@@ -18,7 +18,7 @@ if($errorCondition != null) {
         echo '                <tr><td colspan="2">We did not find an existing runner with your name.<br />Please make sure all data is accurate.</td></tr>' . PHP_EOL;
         $racerDiscrim = null;
     } else {
-        $racerDiscrim = $row['racetimeDiscriminator'];
+        $racerDiscrim = $row['rtgg_discriminator'];
         echo '                <tr><td colspan="2">We found an existing runner with your name!<br />Please make sure all data is accurate.</td></tr>' . PHP_EOL;
     }
     echo '                <tr><td>Your Name: </td><td>' . $racerName;

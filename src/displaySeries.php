@@ -1,12 +1,12 @@
 <?php
 $seriesID = $_GET['seriesID'];
-$stmt = $pdo->prepare("SELECT seriesName, seriesDescription, seriesMembers FROM series WHERE id = :id");
+$stmt = $pdo->prepare("SELECT series_name, series_description, series_members FROM series WHERE id = :id");
 $stmt->bindValue(':id', $seriesID, PDO::PARAM_INT);
 $stmt->execute();
 $rslt = $stmt->fetch();
-$name = $rslt['seriesName'];
-$desc = $rslt['seriesDescription'];
-$members = $rslt['seriesMembers'];
+$name = $rslt['series_name'];
+$desc = $rslt['series_description'];
+$members = $rslt['series_members'];
 ?>
         <div class="asyncMiddle">Races in <?= $name ?></div><br /><div class="asyncBottom"><?= $desc ?></div>
         <table class="searchResults sortable">
@@ -18,55 +18,24 @@ $members = $rslt['seriesMembers'];
 $memberArray = explode(', ', $members);
 if ($memberArray[0] != null) {
     $rowCounter = 0;
-    foreach($memberArray as $raceID) {
-        $raceID = intval($raceID);
+    foreach($memberArray as $race_id) {
+        $race_id = intval($race_id);
         $rowCounter++;
+        require ('../includes/race_info.php');
         if($rowCounter % 2 == 0) {
-            $startOfRow = '                <tr class="even">';
+            $start_of_row = '                <tr class="even">';
         } else {
-            $startOfRow = '                <tr class="odd">';
+            $start_of_row = '                <tr class="odd">';
         }
-        $stmt = $pdo->prepare("SELECT * FROM races WHERE id = :id");
-        $stmt->bindValue(':id', $raceID, PDO::PARAM_INT);
-        $stmt->execute();
-        $row = $stmt->fetch();
-        $raceSlug = $row['raceSlug'];
-        $raceStart = $row['raceStart'];
-        $raceMode = $row['raceMode'];
-        $raceSeed = $row['raceSeed'];
-        $raceHash = $row['raceHash'];
-        if(strlen($row['raceDescription']) > 63) { $raceDescription = substr($row['raceDescription'], 0, 60) . '...'; } else { $raceDescription = $row['raceDescription']; }
-        $raceIsTeam = $row['raceIsTeam'];
-        $raceIsSpoiler = $row['raceIsSpoiler'];
-        $raceSpoilerLink = $row['raceSpoilerLink'];
-        $raceFromRacetime = $row['raceFromRacetime'];
-        $raceTournament = $row['tournament_seed'];
-        if($raceIsTeam == 'y') {
-            $raceDescription = 'CO-OP/TEAM - ' . $raceDescription;
-            $teamCountSQL = $pdo->prepare("SELECT COUNT(DISTINCT racerTeam) FROM results WHERE raceSlug = ?");
-            $teamCountSQL->execute([$raceSlug]);
-            $participantCount = $teamCountSQL->fetchColumn();
-        } else {
-            $playerCountSQL = $pdo->prepare("SELECT COUNT(DISTINCT racerRacetimeID) FROM results WHERE raceSlug = ?");
-            $playerCountSQL->execute([$raceSlug]);
-            $participantCount = $playerCountSQL->fetchColumn();
+        echo $start_of_row . '<td>' . $race_date . '</td><td>' . $race_mode . '</td><td>' . $race_description_short . '</td><td>';
+        if ($race_from_racetime == 'y' ) {
+            echo '<a target="_blank" href="https://racetime.gg/alttpr/' . $race_slug . '">';
         }
-        if($raceIsSpoiler == 'y') {
-            if($raceDescription == '') {
-                $raceDescription = '<a target="_blank" href="' . $raceSpoilerLink . '">Link to Spoiler</a>';
-            } else {
-                $raceDescription = $raceDescription . ' - <a target="_blank" href="' . $raceSpoilerLink . '">Link to Spoiler</a>';
-            }
-        }
-        echo $startOfRow . '<td>' . $raceStart . '</td><td>' . $raceMode . '</td><td>' . $raceDescription . '</td><td>';
-        if ($raceFromRacetime == 'y' ) {
-            echo '<a target="_blank" href="https://racetime.gg/alttpr/' . $raceSlug . '">';
-        }
-        echo $raceSlug;
-        if ($raceFromRacetime == 'y') {
+        echo $race_slug;
+        if ($race_from_racetime == 'y') {
             echo '</a>';
         }
-        echo '</td><td>'; if ($raceTournament == 'y') { echo 'Tournament Async'; } else { echo '<a target="_blank" href="' . $raceSeed . '">Download Seed</a>'; } echo '</td><td>' . hashToImages($raceHash) . '</td><td>' . $participantCount . '<td><a href="' . $domain . '/async/' . $raceID . '">Submit Async</a></td><td><a href="' . $domain . '/results/' . $raceID . '">View Results</a></td></tr>' . PHP_EOL;
+        echo '</td><td>'; if ($race_tournament_flag == 'y') { echo 'Tournament Async'; } else { echo '<a target="_blank" href="' . $race_seed . '">Download Seed</a>'; } echo '</td><td>' . hashToImages($race_hash) . '</td><td>' . $participant_count . '<td><a href="' . $domain . '/async/' . $race_id . '">Submit Async</a></td><td><a href="' . $domain . '/results/' . $race_id . '">View Results</a></td></tr>' . PHP_EOL;
     }
 }
 ?>

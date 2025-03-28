@@ -1,11 +1,11 @@
 <?php
 
 $errorCondition = null;
-$stmt = $pdo->prepare("SELECT id FROM results WHERE raceSlug = ? AND racerRacetimeID IN (SELECT racetimeID FROM racerinfo WHERE racetimeName = ? OR racetimeName = ?)");
+$stmt = $pdo->prepare("SELECT id FROM results WHERE raceSlug = ? AND racerRacetimeID IN (SELECT racetimeID FROM racerinfo WHERE rtgg_name = ? OR rtgg_name = ?)");
 $stmt->execute([$raceSlug, $_POST['racer1Name'], $_POST['racer2Name']]);
 $row = $stmt->fetchColumn();
 if(! $row) { // Check for existing runners
-    $check1 = $pdo->prepare("SELECT racetimeID FROM racerinfo WHERE racetimeName = :name");
+    $check1 = $pdo->prepare("SELECT racetimeID FROM racerinfo WHERE rtgg_name = :name");
     $check1->bindParam(':name', $_POST['racer1Name'], PDO::PARAM_STR);
     $check1->execute();
     $checkRow1 = $check1->fetchColumn();
@@ -20,14 +20,14 @@ if(! $row) { // Check for existing runners
                 break;
             }
         }
-        $addRacer1 = $pdo->prepare("INSERT INTO racerinfo (racetimeID, racetimeName) VALUES (:id, :name)");
+        $addRacer1 = $pdo->prepare("INSERT INTO racerinfo (racetimeID, rtgg_name) VALUES (:id, :name)");
         $addRacer1->bindParam(':id', $racer1ID, PDO::PARAM_STR);
         $addRacer1->bindParam(':name', $_POST['racer1Name'], PDO::PARAM_STR);
         $addRacer1->execute();
     } else {
         $racer1ID = $checkRow1;
     }
-    $check2 = $pdo->prepare("SELECT racetimeID FROM racerinfo WHERE racetimeName = :name");
+    $check2 = $pdo->prepare("SELECT racetimeID FROM racerinfo WHERE rtgg_name = :name");
     $check2->bindParam(':name', $_POST['racer2Name'], PDO::PARAM_STR);
     $check2->execute();
     $checkRow2 = $check2->fetchColumn();
@@ -42,7 +42,7 @@ if(! $row) { // Check for existing runners
                 break;
             }
         }
-        $addRacer2 = $pdo->prepare("INSERT INTO racerinfo (racetimeID, racetimeName) VALUES (:id, :name)");
+        $addRacer2 = $pdo->prepare("INSERT INTO racerinfo (racetimeID, rtgg_name) VALUES (:id, :name)");
         $addRacer2->bindParam(':id', $racer2ID, PDO::PARAM_STR);
         $addRacer2->bindParam(':name', $_POST['racer2Name'], PDO::PARAM_STR);
         $addRacer2->execute();

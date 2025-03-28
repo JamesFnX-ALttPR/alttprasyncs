@@ -9,157 +9,101 @@ header('Content-Type: application/json; charset=utf-8');
 http_response_code($httpStatus);
 $jsonArray = array();
 if (isset($_GET['raceID'])) {
-    $raceID = $_GET['raceID'];
-    $jsonArray['id'] = $raceID;
-    $stmt = $pdo->prepare("SELECT * FROM races WHERE id = :id");
-    $stmt->bindParam(':id', $raceID, PDO::PARAM_INT);
-    $stmt->execute();
-    $row = $stmt->fetch();
-    $raceSlug = $row['raceSlug'];
-    $jsonArray['slug'] = $raceSlug;
-    $raceMode = $row['raceMode'];
-    $jsonArray['mode'] = $raceMode;
-    $raceSeed = $row['raceSeed'];
-    $jsonArray['seed'] = $raceSeed;
-    $raceHash = $row['raceHash'];
-    $jsonArray['hash'] = $raceHash;
-    $raceIsTeam = $row['raceIsTeam'];
-    $jsonArray['team_race'] = $raceIsTeam;
-    $raceIsSpoiler = $row['raceIsSpoiler'];
-    $jsonArray['spoiler_race'] = $raceIsSpoiler;
-    if ($raceIsSpoiler == 'y') {
-        $SpoierLink = $row['raceSpoilerLink'];
-        $jsonArray['spoiler'] = $spoilerLink;
+    $race_id = $_GET['raceID'];
+    $jsonArray['id'] = $race_id;
+    require ('../includes/race_info.php');
+    $jsonArray['slug'] = $race_slug;
+    $jsonArray['mode'] = $race_mode;
+    $jsonArray['seed'] = $race_seed;
+    $jsonArray['hash'] = $race_hash;
+    $jsonArray['team_race'] = $race_team_flag;
+    $jsonArray['spoiler_race'] = $race_spoiler_flag;
+    if ($race_spoiler_flag == 'y') {
+        $jsonArray['spoiler'] = $race_spoiler_link;
     }
-    if ($raceIsTeam == 'n') { //Sort the list of racers by time with forfeits on the bottom and form the rest of the JSON
-        $stmt = $pdo->prepare("SELECT * FROM results WHERE raceSlug = :slug AND racerForfeit = 'n' ORDER BY racerRealTime");
-        $stmt->bindParam(':slug', $raceSlug, PDO::PARAM_STR);
+    if ($race_team_flag == 'n') { //Sort the list of racers by time with forfeits on the bottom and form the rest of the JSON
+        $stmt = $pdo->prepare("SELECT id FROM results WHERE raceSlug = :slug AND racerForfeit = 'n' ORDER BY racerRealTime");
+        $stmt->bindValue(':slug', $race_slug, PDO::PARAM_STR);
         $stmt->execute();
         while ($row = $stmt->fetch()) {
-            $racerID = $row['racerRacetimeID'];
-            $stmt2 = $pdo->prepare("SELECT racetimeName FROM racerinfo WHERE racetimeID = :racerID");
-            $stmt2->bindParam(':racerID', $racerID, PDO::PARAM_STR);
-            $stmt2->execute();
-            $racerName = $stmt2->fetchColumn();
-            if (! $racerName) {
+            $result_id = $row['id'];
+            require ('../includes/result_info.php');
+            if (! $racer_name) {
                 echo json_encode($jsonArray);
-                $dieString = 'Racer ' . $racerID . ' not found';
+                $dieString = 'Racer ' . $racer_id . ' not found';
                 die ($dieString);
             }
-            $racerTime = $row['racerRealTime'];
-            $racerCR = $row['racerCheckCount'];
-            $racerComment = $row['racerComment'];
-            $racerVOD = $row['racerVODLink'];
-            $jsonArray['participants'][] = [ 'racer_name' => $racerName , 'time' => $racerTime , 'collection_rate' => $racerCR , 'vod_link' => $racerVOD , 'comments' => $racerComment ];
+            $jsonArray['participants'][] = [ 'racer_name' => $racer_name , 'time' => $racer_time , 'collection_rate' => $racer_collection_rate , 'vod_link' => $racer_vod , 'comments' => $racer_comment ];
         }
-        $stmt = $pdo->prepare("SELECT * FROM results WHERE raceSlug = :slug AND racerForfeit = 'y'");
-        $stmt->bindParam(':slug', $raceSlug, PDO::PARAM_STR);
+        $stmt = $pdo->prepare("SELECT id FROM results WHERE raceSlug = :slug AND racerForfeit = 'y'");
+        $stmt->bindValue(':slug', $race_slug, PDO::PARAM_STR);
         $stmt->execute();
         while ($row = $stmt->fetch()) {
-            $racerID = $row['racerRacetimeID'];
-            $stmt2 = $pdo->prepare("SELECT racetimeName FROM racerinfo WHERE racetimeID = :racerID");
-            $stmt2->bindParam(':racerID', $racerID, PDO::PARAM_STR);
-            $stmt2->execute();
-            $racerName = $stmt2->fetchColumn();
-            if (! $racerName) {
+            $result_id = $row['id'];
+            require ('../includes/result_info.php');
+            if (! $racer_name) {
                 echo json_encode($jsonArray);
-                $dieString = 'Racer ' . $racerID . ' not found';
+                $dieString = 'Racer ' . $racer_id . ' not found';
                 die ($dieString);
             }
-            $racerTime = 'Forfeit';
-            $racerComment = $row['racerComment'];
-            $racerVOD = $row['racerVODLink'];
-            $jsonArray['participants'][] = [ 'racer_name' => $racerName , 'time' => $racerTime , 'vod_link' => $racerVOD , 'comments' => $racerComment ];
+            $racer_time = 'Forfeit';
+            $jsonArray['participants'][] = [ 'racer_name' => $racer_name , 'time' => $racer_time , 'vod_link' => $racer_vod , 'comments' => $racer_comment ];
         }
     } else { //For team races, there's a few extra steps
-        $stmt = $pdo->prepare("TRUNCATE TABLE results_temp"); //Clear out the temp table
-        $stmt->execute();
-        $stmt = $pdo->prepare("SELECT DISTINCT(racerTeam) FROM results WHERE raceSlug = :slug"); //Find all teams for this race
-        $stmt->bindParam(':slug', $raceSlug, PDO::PARAM_STR);
-        $stmt->execute();
-        while ($row = $stmt->fetch()) {
-            $team = $row['racerTeam'];
-            $stmt2 = $pdo->prepare("SELECT racerRealTime FROM results WHERE raceSlug = :slug AND racerTeam = :team AND racerForfeit = 'y'"); //Determine if there are any forfeits for this team
-            $stmt2->bindParam(':slug', $raceSlug, PDO::PARAM_STR);
-            $stmt2->bindParam(':team', $team, PDO::PARAM_STR);
-            $stmt2->execute();
-            $rslt = $stmt2->fetchAll(PDO::FETCH_COLUMN);
-            if (count($rslt) > 0) { //If there's a forfeit on the team, input the team as a forfeit in the temp table
-                $stmt2 = $pdo->prepare("INSERT INTO results_temp (teamName, teamForfeit) VALUES (:team, 'y')");
-                $stmt2->bindParam(':team', $team, PDO::PARAM_STR);
-                $stmt2->execute();
-            } else { //Get the average time for everyone on the team and insert it into the temp table
-                $stmt2 = $pdo->prepare("SELECT AVG(racerRealTime) FROM results WHERE raceSlug = :slug AND racerTeam = :team AND racerForfeit = 'n'");
-                $stmt2->bindParam(':slug', $raceSlug, PDO::PARAM_STR);
-                $stmt2->bindParam(':team', $team, PDO::PARAM_STR);
-                $stmt2->execute();
-                $avgTime = round($stmt2->fetchColumn());
-                $stmt2 = $pdo->prepare("INSERT INTO results_temp (teamName, averageTime, teamForfeit) VALUES (:team, :averagetime, 'n')");
-                $stmt2->bindParam(':team', $team, PDO::PARAM_STR);
-                $stmt2->bindParam(':averagetime', $avgTime, PDO::PARAM_INT);
-                $stmt2->execute();
-                unset ($avgTime);
-            }
-            unset ($team);
-        }
+        $temp_table_hash = createCallbackLink();
+        $check_count = 1;
+        require ('../src/populateTempTable.php');
         //Now that the temp table is complete, let's gather individual results and form the JSON
         $rowCount = 0;
-        $stmt = $pdo->prepare("SELECT teamName, averageTime FROM results_temp WHERE teamForfeit = 'n' ORDER BY averageTime");
+        $sql = "SELECT teamName, averageTime FROM temp_" . $temp_table_hash . " WHERE teamForfeit = 'n' ORDER BY averageTime";
+        $stmt = $pdo->prepare($sql);
         $stmt->execute();
         while ($row = $stmt->fetch()) {
             $team = $row['teamName'];
             $avgTime = $row['averageTime'];
             $jsonArray['teams'][$rowCount] = [ 'team_name' => $team , 'average_time' => $avgTime, 'forfeit' => 'n' ];
-            $stmt2 = $pdo->prepare("SELECT racerRacetimeID, racerRealTime, racerComment, racerCheckCount, racerVODLink FROM results WHERE raceSlug = :slug AND racerTeam = :team ORDER BY racerRealTime");
-            $stmt2->bindParam(':slug', $raceSlug, PDO::PARAM_STR);
-            $stmt2->bindParam(':team', $team, PDO::PARAM_STR);
+            $stmt2 = $pdo->prepare("SELECT id FROM results WHERE raceSlug = :slug AND racerTeam = :team ORDER BY racerRealTime");
+            $stmt2->bindValue(':slug', $race_slug, PDO::PARAM_STR);
+            $stmt2->bindValue(':team', $team, PDO::PARAM_STR);
             $stmt2->execute();
             while ($row2 = $stmt2->fetch()) {
-                $racerID = $row2['racerRacetimeID'];
-                $stmt3 = $pdo->prepare("SELECT racetimeName FROM racerinfo WHERE racetimeID = :racerID");
-                $stmt3->bindParam(':racerID', $racerID, PDO::PARAM_STR);
-                $stmt3->execute();
-                $racerName = $stmt3->fetchColumn();
-                if (! $racerName) {
+                $result_id = $row2['id'];
+                require ('../includes/result_info.php');
+                if (! $racer_name) {
                     echo json_encode($jsonArray);
-                    $dieString = 'Racer ' . $racerID . ' not found';
+                    $dieString = 'Racer ' . $racer_id . ' not found';
                     die ($dieString);
                 }
-                $racerTime = $row2['racerRealTime'];
-                $racerCR = $row2['racerCheckCount'];
-                $racerComment = $row2['racerComment'];
-                $racerVOD = $row2['racerVODLink'];
-                $jsonArray['teams'][$rowCount]['members'][] = [ 'racer_name' => $racerName , 'time' => $racerTime , 'collection_rate' => $racerCR , 'vod_link' => $racerVOD , 'comments' => $racerComment ];
+                $jsonArray['teams'][$rowCount]['members'][] = [ 'racer_name' => $racer_name , 'time' => $racer_time , 'collection_rate' => $racer_collection_rate , 'vod_link' => $racer_vod , 'comments' => $racer_comment ];
             }
             $rowCount++;
         }
-        $stmt = $pdo->prepare("SELECT teamName, averageTime FROM results_temp WHERE teamForfeit = 'y'");
+        $sql = "SELECT teamName, averageTime FROM temp_" . $temp_table_hash . " WHERE teamForfeit = 'y'";
+        $stmt = $pdo->prepare($sql);
         $stmt->execute();
         while ($row = $stmt->fetch()) {
             $team = $row['teamName'];
             $jsonArray['teams'][$rowCount] = [ 'team_name' => $team, 'forfeit' => 'y' ];
-            $stmt2 = $pdo->prepare("SELECT racerRacetimeID, racerComment, racerVODLink FROM results WHERE raceSlug = :slug AND racerTeam = :team");
-            $stmt2->bindParam(':slug', $raceSlug, PDO::PARAM_STR);
-            $stmt2->bindParam(':team', $team, PDO::PARAM_STR);
+            $stmt2 = $pdo->prepare("SELECT id FROM results WHERE raceSlug = :slug AND racerTeam = :team");
+            $stmt2->bindValue(':slug', $race_slug, PDO::PARAM_STR);
+            $stmt2->bindValue(':team', $team, PDO::PARAM_STR);
             $stmt2->execute();
             while ($row2 = $stmt2->fetch()) {
-                $racerID = $row2['racerRacetimeID'];
-                $stmt3 = $pdo->prepare("SELECT racetimeName FROM racerinfo WHERE racetimeID = :racerID");
-                $stmt3->bindParam(':racerID', $racerID, PDO::PARAM_STR);
-                $stmt3->execute();
-                $racerName = $stmt3->fetchColumn();
-                if (! $racerName) {
+                $result_id = $row2['id'];
+                require ('../includes/result_info.php');
+                if (! $racer_name) {
                     echo json_encode($jsonArray);
-                    $dieString = 'Racer ' . $racerID . ' not found';
+                    $dieString = 'Racer ' . $racer_id . ' not found';
                     die ($dieString);
                 }
-                $racerTime = 'Forfeit';
-                $racerComment = $row2['racerComment'];
-                $racerVOD = $row2['racerVODLink'];
-                $jsonArray['teams'][$rowCount]['members'][] = [ 'racer_name' => $racerName , 'time' => $racerTime , 'vod_link' => $racerVOD , 'comments' => $racerComment ];
+                $racer_time = "Forfeit";
+                $jsonArray['teams'][$rowCount]['members'][] = [ 'racer_name' => $racer_name , 'time' => $racer_time , 'vod_link' => $racer_vod , 'comments' => $racer_comment ];
             }
             $rowCount++;
         }
+        $sql = "DROP TABLE temp_" . $temp_table_hash;
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
     }
     echo json_encode ($jsonArray);
     exit();

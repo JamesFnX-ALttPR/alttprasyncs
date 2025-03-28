@@ -2,7 +2,7 @@
 require_once ('../includes/bootstrap.php');
 
 // Check if logged in user is an admin
-$stmt = $pdo->prepare("SELECT is_admin FROM asyncusers WHERE id = :id");
+$stmt = $pdo->prepare("SELECT admin_flag FROM asyncusers WHERE id = :id");
 $stmt->bindValue(':id', $_SESSION['userid'], PDO::PARAM_INT);
 $stmt->execute();
 $isAdmin = $stmt->fetchColumn();
@@ -43,7 +43,7 @@ if (is_post_request()) {
     $racerCR = $row['racerCheckCount'];
     $racerVODLink = $row['racerVODLink'];
     $enteredBy = $row['enteredBy'];
-    $stmt = $pdo->prepare("SELECT racetimeName FROM racerinfo WHERE racetimeID = :racetimeID");
+    $stmt = $pdo->prepare("SELECT rtgg_name FROM racerinfo WHERE racetimeID = :racetimeID");
     $stmt->bindValue(':racetimeID', $racetimeID, PDO::PARAM_STR);
     $stmt->execute();
     $racerName = $stmt->fetchColumn();

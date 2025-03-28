@@ -59,7 +59,7 @@ for($i=0;$i<$slugCount;$i++) {
         if(! $raceExists) {
             if(substr($raceMode, 0, 7) == 'spoiler' || substr($raceMode, 0, 7) == 'Spoiler') {
                 $chatLog = 'https://racetime.gg/alttpr/' . $slugList[$i] . '.txt';
-                preg_match('/https://.+(s|S)poiler.+.(txt|json)/', curlData($chatLog), $matches);
+                preg_match('/https:\/\/.+(s|S)poiler.+\.(txt|json)/', curlData($chatLog), $matches);
                 $spoilerLink = $matches[0];
                 $raceIsSpoiler = 'y';
             } else {
@@ -100,10 +100,10 @@ for($i=0;$i<$slugCount;$i++) {
                     $stmt->execute([$playerRacetimeID]);
                     $racetimeIDExists = $stmt->fetchColumn();
                     if(! $racetimeIDExists) {
-                        $sql = "INSERT INTO racerinfo (racetimeID, racetimeName, racetimeDiscriminator) VALUES (?, ?, ?)";
+                        $sql = "INSERT INTO racerinfo (racetimeID, rtgg_name, rtgg_discriminator) VALUES (?, ?, ?)";
                         $pdo->prepare($sql)->execute([$playerRacetimeID, $playerName, $playerDiscriminator]);
                     } else {
-                        $sql = "UPDATE racerinfo SET racetimeName = ?, racetimeDiscriminator = ? WHERE racetimeID = ?";
+                        $sql = "UPDATE racerinfo SET rtgg_name = ?, rtgg_discriminator = ? WHERE racetimeID = ?";
                         $pdo->prepare($sql)->execute([$playerName, $playerDiscriminator, $playerRacetimeID]);
                     }
                 }

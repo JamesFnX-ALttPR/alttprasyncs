@@ -1,4 +1,6 @@
 RewriteEngine on
+RewriteCond %{HTTP_HOST} ^beta.alttprasyncs.com$
+RewriteRule (.*)$ https://alttprasyncs.com/$1 [R=301,L]
 RewriteRule ^search$ app/search.php [END]
 RewriteRule ^async/(\d+)$ app/async.php?raceID=$1 [END]
 RewriteRule ^results/(\d+)$ app/results.php?raceID=$1 [END]
@@ -22,8 +24,8 @@ RewriteRule ^deleteresult$ app/deleteresult.php [END]
 RewriteRule ^useradmin$ app/useradmin.php [END]
 RewriteRule ^series$ app/series.php [END]
 RewriteRule ^reset$ app/reset.php [END]
-RewriteRule ^resetpassword$ app/resetpassword.php [END]
 RewriteRule ^resetpassword/([0-9a-f]+)$ app/resetpassword.php?request=$1 [END]
+RewriteRule ^resetpassword$ app/resetpassword.php [END]
 RewriteRule ^series/(\d+)$ app/series.php?seriesID=$1 [END]
 RewriteRule ^editseries/(\d+)$ app/editseries.php?seriesID=$1 [END]
 RewriteCond %{REQUEST_FILENAME} !-f

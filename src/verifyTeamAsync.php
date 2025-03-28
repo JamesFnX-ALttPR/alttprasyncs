@@ -7,23 +7,23 @@ if($errorCondition != null) {
     echo '        <table class="submitAsync">' . PHP_EOL;
     echo '            <caption>Confirm Results Submission</caption>' . PHP_EOL;
     echo '            <tbody>' . PHP_EOL;
-    $stmt = $pdo->prepare("SELECT racetimeID, racetimeDiscriminator FROM racerinfo WHERE racetimeName = :name");
+    $stmt = $pdo->prepare("SELECT racetimeID, rtgg_discriminator FROM racerinfo WHERE rtgg_name = :name");
     $stmt->bindValue(':name', $racer1Name, PDO::PARAM_STR);
     $stmt->execute();
     $racer1Row = $stmt->fetch();
     if ($racer1Row) {
-        $racer1Discrim = $racer1Row['racetimeDiscriminator'];
+        $racer1Discrim = $racer1Row['rtgg_discriminator'];
         $racer1Exists = 'y';
     } else {
         $racer1Discrim = null;
         $racer1Exists = 'n';
     }
-    $stmt = $pdo->prepare("SELECT racetimeID, racetimeDiscriminator FROM racerinfo WHERE racetimeName = :name");
+    $stmt = $pdo->prepare("SELECT racetimeID, rtgg_discriminator FROM racerinfo WHERE rtgg_name = :name");
     $stmt->bindValue(':name', $racer2Name, PDO::PARAM_STR);
     $stmt->execute();
     $racer2Row = $stmt->fetch();
     if ($racer2Row) {
-        $racer2Discrim = $racer2Row['racetimeDiscriminator'];
+        $racer2Discrim = $racer2Row['rtgg_discriminator'];
         $racer2Exists = 'y';
     } else {
         $racer2Discrim = null;

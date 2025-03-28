@@ -6,6 +6,7 @@ session_set_cookie_params([
     'secure' => true,
     'httponly' => true
 ]);
+//ini_set('display_errors', -1); // Development Only
 session_start();
 $domain = getRequestURL();
 

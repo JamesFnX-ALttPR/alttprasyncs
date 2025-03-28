@@ -1,12 +1,20 @@
 <?php
 require_once ('../includes/bootstrap.php');
+// Check if user is logged in - if not, present the login page instead
+if (!isset ($_SESSION['userid'])) {
+    $pageTitle = 'Error Editing Async';
+    require_once ('../includes/header.php');
+    echo '        <div class="error">You must be logged in to create asyncs. Please log in.</div>' . PHP_EOL;
+    require_once ('../src/loginForm.php');
+    die;
+}
 
 // Check if logged in user is an admin
-$stmt = $pdo->prepare("SELECT is_admin FROM asyncusers WHERE id = :id");
+$stmt = $pdo->prepare("SELECT admin_flag FROM asyncusers WHERE id = :id");
 $stmt->bindValue(':id', $_SESSION['userid'], PDO::PARAM_INT);
 $stmt->execute();
-$isAdmin = $stmt->fetchColumn();
-
+$admin_flag = $stmt->fetchColumn();
+    
 // Make sure we got a race ID from the GET request and that it exists
 if (! isset($_GET['raceID'])) {
     $pageTitle = 'Error Editing Async';
@@ -15,15 +23,15 @@ if (! isset($_GET['raceID'])) {
     require_once ('../includes/footer.php');
     die;
 }
-$raceID = $_GET['raceID'];
+$race_id = $_GET['raceID'];
 if (is_post_request()) {
     $pageTitle = 'Edit Async';
     require_once ('../includes/header.php');
     require_once ('../src/editAsyncInDatabase.php');
     require_once ('../includes/footer.php');
 } else {
-        $stmt = $pdo->prepare("SELECT * FROM races WHERE id = :id");
-    $stmt->bindValue(':id', $raceID, PDO::PARAM_INT);
+    $stmt = $pdo->prepare("SELECT * FROM races WHERE id = :id");
+    $stmt->bindValue(':id', $race_id, PDO::PARAM_INT);
     $stmt->execute();
     $row = $stmt->fetch();
     if (! $row) {
@@ -52,7 +60,7 @@ if (is_post_request()) {
     $tournament = $row['tournament_seed'];
     $createdBy = $row['createdBy'];
     // Make sure this user can edit this race
-    if ($isAdmin == 'n' && $createdBy != $_SESSION['userid']) {
+    if ($admin_flag == 'n' && $createdBy != $_SESSION['userid']) {
         $pageTitle = 'Error Editing Async';
         require_once ('../includes/header.php');
         echo '        <div class="error">You are not authorized to edit this async - Go <a href="' . $domain . '/yourasyncs">back</a> and try again.</div>' . PHP_EOL;

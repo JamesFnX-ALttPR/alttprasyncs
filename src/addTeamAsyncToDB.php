@@ -2,7 +2,7 @@
 
 $errorCondition = null;
 $stmt = $pdo->prepare("SELECT id FROM results WHERE raceSlug = ? AND racerRacetimeID IN (SELECT racetimeID FROM racerinfo WHERE rtgg_name = ? OR rtgg_name = ?)");
-$stmt->execute([$raceSlug, $_POST['racer1Name'], $_POST['racer2Name']]);
+$stmt->execute([$race_slug, $_POST['racer1Name'], $_POST['racer2Name']]);
 $row = $stmt->fetchColumn();
 if(! $row) { // Check for existing runners
     $check1 = $pdo->prepare("SELECT racetimeID FROM racerinfo WHERE rtgg_name = :name");
@@ -91,7 +91,7 @@ if(! $row) { // Check for existing runners
         } else {
             $enteredBy = null;
         }
-        $insertSQL->bindParam(':slug1', $raceSlug, PDO::PARAM_STR);
+        $insertSQL->bindParam(':slug1', $race_slug, PDO::PARAM_STR);
         $insertSQL->bindParam(':id1', $racer1ID, PDO::PARAM_STR);
         $insertSQL->bindParam(':team1', $teamName, PDO::PARAM_STR);
         $insertSQL->bindParam(':rt1', $racer1RT, PDO::PARAM_INT);
@@ -100,7 +100,7 @@ if(! $row) { // Check for existing runners
         $insertSQL->bindParam(':cr1', $racer1CR, PDO::PARAM_INT);
         $insertSQL->bindParam(':vod1', $racer1VOD, PDO::PARAM_STR);
         $insertSQL->bindParam(':enteredBy1', $enteredBy, PDO::PARAM_INT);
-        $insertSQL->bindParam(':slug2', $raceSlug, PDO::PARAM_STR);
+        $insertSQL->bindParam(':slug2', $race_slug, PDO::PARAM_STR);
         $insertSQL->bindParam(':id2', $racer2ID, PDO::PARAM_STR);
         $insertSQL->bindParam(':team2', $teamName, PDO::PARAM_STR);
         $insertSQL->bindParam(':rt2', $racer2RT, PDO::PARAM_INT);
@@ -140,14 +140,14 @@ if(! $row) { // Check for existing runners
         } else {
             $enteredBy = null;
         }
-        $insertSQL->bindParam(':slug1', $raceSlug, PDO::PARAM_STR);
+        $insertSQL->bindParam(':slug1', $race_slug, PDO::PARAM_STR);
         $insertSQL->bindParam(':id1', $racer1ID, PDO::PARAM_STR);
         $insertSQL->bindParam(':team1', $teamName, PDO::PARAM_STR);
         $insertSQL->bindParam(':comment1', $racer1Comment, PDO::PARAM_STR);
         $insertSQL->bindParam(':forfeit1', $racer1Forfeit, PDO::PARAM_STR);
         $insertSQL->bindParam(':vod1', $racer1VOD, PDO::PARAM_STR);
         $insertSQL->bindParam(':enteredBy1', $enteredBy, PDO::PARAM_INT);
-        $insertSQL->bindParam(':slug2', $raceSlug, PDO::PARAM_STR);
+        $insertSQL->bindParam(':slug2', $race_slug, PDO::PARAM_STR);
         $insertSQL->bindParam(':id2', $racer2ID, PDO::PARAM_STR);
         $insertSQL->bindParam(':team2', $teamName, PDO::PARAM_STR);
         $insertSQL->bindParam(':comment2', $racer2Comment, PDO::PARAM_STR);

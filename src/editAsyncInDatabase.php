@@ -83,10 +83,10 @@ if ($errors != '') {
     $stmt->bindValue(':allowResultEdits', $raceAllowResultEdits, PDO::PARAM_STR);
     $stmt->bindValue(':locked', $raceLocked, PDO::PARAM_STR);
     $stmt->bindParam(':tournament', $tournament, PDO::PARAM_STR);
-    $stmt->bindValue(':id', $raceID, PDO::PARAM_INT);
+    $stmt->bindValue(':id', $race_id, PDO::PARAM_INT);
     $stmt->execute();
 
-    $notes = 'Async Accepted! View your async here:<br /><a href="' . $domain . '/async/' . $raceID . '">' . $domain . '/async/' . $raceID . '</a>';
+    $notes = 'Async Accepted! View your async here:<br /><a href="' . $domain . '/async/' . $race_id . '">' . $domain . '/async/' . $race_id . '</a>';
     echo '        <table class="submitAsync">' . PHP_EOL;
     echo '            <tbody>' . PHP_EOL;
     echo '                <tr><td colspan="2">' . $notes . '</td><tr>' . PHP_EOL;

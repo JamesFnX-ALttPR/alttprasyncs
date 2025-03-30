@@ -55,7 +55,7 @@ if (is_post_request()) {
     }
     $pageTitle = 'Edit Result for' . $race_slug;
     require_once ('../includes/header.php');
-    // Build out the form to edit 
+    // Build out the form to edit
     require_once ('../src/inputEditResult.php');
     require_once ('../includes/footer.php');
 }

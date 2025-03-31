@@ -308,8 +308,8 @@ if($race_team_flag == 'n') {
     $stmt->execute();
 }
 if (isset($_SESSION['userid']) && isset($race_created_by)) {
-    if($_SESSION['userid'] == $race_created_by) {
-        echo '                <tr><td colspan="'; if ($race_team_flag == 'y') { echo '5'; } else { echo '3'; } echo '" class="submitButton"><form method="post" action=""><input type="Submit" class="submitButton" value="Download Results as .CSV" /></form></td></tr>' . PHP_EOL;
+    if($_SESSION['userid'] == $race_created_by || $admin_flag == 'y') {
+        echo '                <tr><td colspan="'; if ($check_count > 0 && $vod_count > 0) { echo '5'; } elseif ($check_count > 0 || $vod_count > 0 ) { echo '4'; } else { echo '3'; } echo '" class="submitButton"><form method="post" action=""><input type="Submit" class="submitButton" value="Download Results as .CSV" /></form></td></tr>' . PHP_EOL;
     }
 }
 echo '            </tbody>' . PHP_EOL;

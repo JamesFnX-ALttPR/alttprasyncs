@@ -5,7 +5,7 @@ include('../src/selectJS.php');
             <table class="createAsync">
                 <caption>Edit Async for <?= $race_slug ?><br /><?php echo hashToImages($race_hash); ?></caption>
                 <tbody>
-                    <tr><th><label for="seed" title="Include the entire URL for the seed\'s permalink, starting with https://">Link to Seed</label> </th><th><label for="mode" title="If there\'s an existing preset, it will autcomplete.">Mode</label></th></tr>
+                    <tr><th><label for="seed" title="Include the entire URL for the seed's permalink, starting with https://">Link to Seed</label> </th><th><label for="mode" title="If there's an existing preset, it will autcomplete.">Mode</label></th></tr>
                     <tr><td class="centerAlign"><input type="text" size="46" id="seed" name="seed" value="<?= $race_seed ?>" required /></td><td class="centerAlign"><input size="46" list="modes" id="mode" name="mode" value="<?= $race_mode ?>" required />
                         <datalist id="modes">
 <?php $stmt = $pdo->query('SELECT DISTINCT raceMode FROM races ORDER BY raceMode');

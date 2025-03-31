@@ -74,7 +74,7 @@ $stmt->bindValue(':raceSpoilerLink', $spoiler_log, PDO::PARAM_STR);
 $stmt->bindValue(':vodRequired', $vod_required, PDO::PARAM_STR);
 $stmt->bindValue(':loginRequired', $login_required, PDO::PARAM_STR);
 $stmt->bindValue(':allowResultEdits', $edits_allowed, PDO::PARAM_STR);
-$stmt->bindParam(':tournament', $tournament_seed, PDO::PARAM_STR);
+$stmt->bindValue(':tournament', $tournament_seed, PDO::PARAM_STR);
 $stmt->bindValue(':createdBy', $created_by, PDO::PARAM_INT);
 $stmt->execute();
 

@@ -1,7 +1,7 @@
 <?php
 
 require_once ('../includes/bootstrap.php');
-
+require_once ('../includes/user_info.php');
 if(!isset($_GET['raceID'])) {
     $pageTitle = 'Error Viewing Async';
     require_once ('../includes/header.php');
@@ -23,7 +23,7 @@ if(!isset($_GET['raceID'])) {
     }
     require ('../includes/race_info.php');
     $pageTitle = 'View Times for ' . $race_slug;
-    if (is_post_request() && $_SESSION['userid'] == $race_created_by) {
+    if (is_post_request() && ($_SESSION['userid'] == $race_created_by || $admin_flag == 'y')) {
         $fields = array("'place'", "'name'", "'team'", "'rt_seconds'", "'cr'", "'comment'", "'forfeit'", "'vod_link'");
         $delimiter = ',';
         $filename = 'alttprasyncs-' . $race_slug . date("Y-m-d H:i:s") . '.csv';
@@ -40,6 +40,15 @@ if(!isset($_GET['raceID'])) {
             $result_id = $row['id'];
             require ('../includes/result_info.php');
             $row_data = array($place, $racer_name, $racer_team, $racer_time, $racer_collection_rate, $racer_comment, $racer_forfeit, $racer_vod);
+            fputcsv($f, $row_data, $delimiter);
+        }
+        $stmt = $pdo->prepare("SELECT id FROM results WHERE raceSlug = :slug AND racerForfeit = 'y'");
+        $stmt->bindValue(':slug', $race_slug, PDO::PARAM_STR);
+        $stmt->execute();
+        while ($row = $stmt->fetch()) {
+            $result_id = $row['id'];
+            require ('../includes/result_info.php');
+            $row_data = array('FF', $racer_name, $racer_team, $racer_time, $racer_collection_rate, $racer_comment, $racer_forfeit, $racer_vod);
             fputcsv($f, $row_data, $delimiter);
         }
         fclose ($f);

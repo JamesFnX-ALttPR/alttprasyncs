@@ -37,9 +37,4 @@ if ($errors != null) {
     echo '                <tr><td colspan="2" class="centerAlign">You will see an option to add asyncs you <a href="' . $domain . '/search">search</a> to this series.</td></tr>' . PHP_EOL;
     echo '            </tbody>' . PHP_EOL;
     echo '        </table>' . PHP_EOL;
-    /*$to = 'jamesfnx@gmail.com';
-    $subject = 'ALttPR Asyncs - New Series Created';
-    $headers = 'From: asyncs@alttprasyncs.com';
-    $body = 'Hello!' . '\r\n' . 'A user has created a new series on alttprasyncs.com!' . '\r\n' . $_SESSION['display_name'] . ' - ' . $series_name . '\r\n' . 'Check it out and see if they need help.';
-    mail($to, $subject, $body, $headers); */
 }

@@ -34,7 +34,7 @@ if (is_post_request()) {
         $racerRTHours = intval(intval(($racer_time - $racerRTSeconds) / 60) - $racerRTMinutes) / 60;
     }
     // Make sure this user can edit this result
-    if ($admin_flag == 'n' && $enteredBy != $_SESSION['userid']) {
+    if ($admin_flag == 'n' && $racer_user_id != $_SESSION['userid']) {
         $pageTitle = 'Error Editing Result';
         require_once ('../includes/header.php');
         echo '        <div class="error">You are not authorized to edit this result - Go <a href="' . $domain . '/yourasyncs">back</a> and try again.</div>' . PHP_EOL;

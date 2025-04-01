@@ -28,7 +28,7 @@ if (is_post_request()) {
     require_once ('../includes/race_info.php');
     [$hash1, $hash2, $hash3, $hash4, $hash5] = unparseHash($race_hash);
     // Make sure this user can edit this race
-    if ($admin_flag == 'n' && $createdBy != $_SESSION['userid']) {
+    if ($admin_flag == 'n' && $race_created_by != $_SESSION['userid']) {
         $pageTitle = 'Error Editing Async';
         require_once ('../includes/header.php');
         echo '        <div class="error">You are not authorized to edit this async - Go <a href="' . $domain . '/yourasyncs">back</a> and try again.</div>' . PHP_EOL;

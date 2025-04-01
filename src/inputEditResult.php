@@ -10,7 +10,7 @@
                 <tr class="timeInput"<?php if ($racer_forfeit == 'y') { echo ' style="display: none;"'; } ?>><td><label for="racerCR" title="Your collected checks from the credits screen.">Your Collection Rate: </label></td><td><input class="CR" type="number" id="racerCR" name="racerCR" min="0"<?php if ($racer_collection_rate != null) { echo ' value ="' . $racer_collection_rate . '"'; } ?> /></td></tr>
                 <tr><td><label for="racerComments">Comments: </label></td><td><input type="text" id="racerComments" name="racerComments"<?php if ($racer_comment != null) { echo ' value ="' . $racer_comment . '"'; } ?> /></td></tr>
                 <tr><td><label for="racerVOD" title="Provide a full link to your VOD, starting with https://.">Link to VOD: </label></td><td><input type="text" id="racerVOD" name="racerVOD"<?php if ($racer_vod != null) { echo ' value ="' . $racer_vod . '"'; } if ($race_vod_flag == 'y') { echo ' required'; } ?> /></td></tr>
-                <tr><td class="submitButton"><input type="Submit" class="submitButton" value="Edit Result" /></td><td class="submitButton"><a href="<?= $domain ?>/yourresults' . '" class="fakeButton">Go Back</a></td></tr>
+                <tr><td class="submitButton"><input type="Submit" class="submitButton" value="Edit Result" /></td><td class="submitButton"><a href="<?= $domain ?>/yourresults" class="fakeButton">Go Back</a></td></tr>
             </table>
         <input type="hidden" id="raceSlug" name="raceSlug" value="<?= $race_slug ?>" /><input type="hidden" id="racerName" name="racerName" value="<?= $racer_name ?>" />
         </form>

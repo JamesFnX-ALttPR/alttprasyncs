@@ -50,14 +50,14 @@ if ($race_data_row) {
             $race_description .= ' - ' . $db_description;
             $race_description_short .= ' - ' . substr($db_description, 0, 60) . '...';
         }
-    } else {
+    } elseif ($db_description != '') {
         if ($race_description == '') {
             $race_description .= $db_description;
             $race_description_short .= $db_description;
         } else {
             $race_description .= ' - ' . $db_description;
             $race_description_short .= ' - ' . $db_description;
-        }
+        }  
     }
     if ($race_spoiler_flag == 'y') {
         if ($race_description == '') {

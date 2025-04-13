@@ -5,28 +5,24 @@ if (isset ($_SESSION['userid'])) {
     require_once ('../includes/user_info.php');
 }
 // Find out if there are any series to add races to - if so, we'll add a column and form for that
-if (isset ($admin_flag)) {
-    if ($admin_flag == 'y') {
-        $stmt = $pdo->prepare("SELECT id FROM series");
-        $stmt->execute();
-        $rslt = $stmt->fetchColumn();
-        if ($rslt) {
-            $seriesColumn = 'y';
-        } else {
-            $seriesColumn = 'n';
-        }
+if (isset ($admin_flag) && $admin_flag == 'y') {
+    $stmt = $pdo->prepare("SELECT id FROM series");
+    $stmt->execute();
+    $rslt = $stmt->fetchColumn();
+    if ($rslt) {
+        $seriesColumn = 'y';
+    } else {
+        $seriesColumn = 'n';
     }
-} elseif (isset ($series_flag)) {
-    if ($series_flag == 'y') {
-        $stmt = $pdo->prepare("SELECT id FROM series WHERE createdBy = :createdBy");
-        $stmt->bindValue(':createdBy', $_SESSION['userid'], PDO::PARAM_INT);
-        $stmt->execute();
-        $rslt = $stmt->fetchColumn();
-        if ($rslt) {
-            $seriesColumn = 'y';
-        } else {
-            $seriesColumn = 'n';
-        }
+} elseif (isset ($series_flag) && $series_flag == 'y') {
+    $stmt = $pdo->prepare("SELECT id FROM series WHERE createdBy = :createdBy");
+    $stmt->bindValue(':createdBy', $_SESSION['userid'], PDO::PARAM_INT);
+    $stmt->execute();
+    $rslt = $stmt->fetchColumn();
+    if ($rslt) {
+        $seriesColumn = 'y';
+    } else {
+        $seriesColumn = 'n';
     }
 } else {
     $seriesColumn = 'n';
@@ -353,9 +349,11 @@ if ($searchTerm == '' && $searchHash == '') {
             require ('../includes/race_info.php');
             echo $startOfRow . '<td>' . $race_date . '</td><td>' . $race_mode . '</td><td>' . $race_description_short . '</td><td>';
             if ($race_from_racetime == 'y' ) {
-                echo '<a target="_blank" href="https://racetime.gg/alttpr/' . $race_slug . '">';
+                echo '<a target="_blank" href="https://racetime.gg/' . $race_slug . '">';
+                echo $short_slug;
+            } else {
+                echo $race_slug;
             }
-            echo $race_slug;
             if ($race_from_racetime == 'y') {
                 echo '</a>';
             }

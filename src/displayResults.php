@@ -1,7 +1,7 @@
 <?php
 echo '        <div class="asyncTopRow">Results for ';
 if($race_from_racetime == 'y') {
-    echo '<a target="_blank" href="https://racetime.gg/alttpr/' . $race_slug . '">' . $race_slug . '</a></div>' . PHP_EOL;
+    echo '<a target="_blank" href="https://racetime.gg/' . $race_slug . '">' . $short_slug . '</a></div>' . PHP_EOL;
 } else {
     echo $race_slug . '</div>' . PHP_EOL;
 }

@@ -29,7 +29,7 @@ if(!isset($_GET['raceID'])) {
         $filename = 'alttprasyncs-' . $race_slug . date("Y-m-d H:i:s") . '.csv';
         $f = fopen('php://output', 'w');
         // In case, if php://output didn't work, uncomment below line
-        // $f = fopen("php://memory", "w"); 
+        // $f = fopen("php://memory", "w");
         fputcsv($f, $fields, $delimiter);
         $place = 0;
         $stmt = $pdo->prepare("SELECT id FROM results WHERE raceSlug = :slug AND racerForfeit = 'n' ORDER BY racerRealTime");
@@ -55,8 +55,8 @@ if(!isset($_GET['raceID'])) {
         // If case fclose does not work, uncomment fseek() and fpassthru().
         // fseek($f, 0);
         // Telling browser to download file as CSV
-        header('Content-Type: text/csv'); 
-        header('Content-Disposition: attachment; filename="'.$filename.'";'); 
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="'.$filename.'";');
         // fpassthru($f);
         exit();
     }

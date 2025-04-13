@@ -8,14 +8,15 @@ $race_data->execute();
 $race_data_row = $race_data->fetch();
 if ($race_data_row) {
     $race_exists = 'y';
+    $race_from_racetime = $race_data_row['raceFromRacetime'];
     $race_slug = $race_data_row['raceSlug'];
+    if ($race_from_racetime == 'y') { $short_slug = substr(strstr($race_slug, '/'), 1); }
     $race_date = $race_data_row['raceStart'];
     $race_mode = $race_data_row['raceMode'];
     $race_seed = $race_data_row['raceSeed'];
     $race_hash = $race_data_row['raceHash'];
     $race_team_flag = $race_data_row['raceIsTeam'];
     $race_spoiler_flag = $race_data_row['raceIsSpoiler'];
-    $race_from_racetime = $race_data_row['raceFromRacetime'];
     $race_vod_flag = $race_data_row['vodRequired'];
     $race_login_flag = $race_data_row['loginRequired'];
     $race_edit_flag = $race_data_row['allowResultEdits'];

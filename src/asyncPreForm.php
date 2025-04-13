@@ -18,7 +18,7 @@ if(! $rslt) {
     $stmt2->execute();
 }
 ?>
-        <div class="asyncTopRow">Submit Async for <?php if($race_from_racetime == 'y') { echo '<a target="_blank" href="https://racetime.gg/alttpr/' . $race_slug . '">' . $race_slug . '</a>'; } else { echo $race_slug; } ?></div><br />
+        <div class="asyncTopRow">Submit Async for <?php if($race_from_racetime == 'y') { echo '<a target="_blank" href="https://racetime.gg/' . $race_slug . '">' . $short_slug . '</a>'; } else { echo $race_slug; } ?></div><br />
         <div class="asyncMiddle">Mode: <?= $race_mode ?><br /><?php if ($race_description != '') { echo $race_description . '<br />'; } ?>Seed Link - <a target="_blank" href="<?= $race_seed ?>"><?= $race_seed ?></a> - Hash: <?php echo hashToImages($race_hash); ?><br />
 <?php
 if ($race_tournament_flag == 'y' && $race_created_by != $user_id) {

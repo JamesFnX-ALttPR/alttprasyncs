@@ -29,9 +29,11 @@ if ($memberArray[0] != null) {
         }
         echo $start_of_row . '<td>' . $race_date . '</td><td>' . $race_mode . '</td><td>' . $race_description_short . '</td><td>';
         if ($race_from_racetime == 'y' ) {
-            echo '<a target="_blank" href="https://racetime.gg/alttpr/' . $race_slug . '">';
+            echo '<a target="_blank" href="https://racetime.gg/' . $race_slug . '">';
+            echo $short_slug;
+        } else {
+            echo $race_slug;
         }
-        echo $race_slug;
         if ($race_from_racetime == 'y') {
             echo '</a>';
         }

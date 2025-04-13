@@ -52,14 +52,29 @@ function convertTimestamp($s) {
 
 function alttprValidateInfoBot($s) {
     if($s == '') {
-        return 'n';
+        return false;
     }
     $sArray = explode(' - ', $s, 3);
     if(count($sArray) < 3) {
-        return 'n';
-    } else {
-        return 'y';
+        return false;
     }
+    $url_to_test = $sArray[1];
+    $hash_to_test = substr($sArray[2], 1, -1);
+    $valid_hashes = ['Big Key', 'Bombos', 'Bombs', 'Book', 'Boomerang', 'Boots', 'Bow', 'Bugnet', 'Cape', 'Compass', 'Empty Bottle', 'Ether', 'Flippers', 'Flute', 'Gloves', 'Green Potion',
+    'Hammer', 'Heart', 'Hookshot', 'Ice Rod', 'Lamp', 'Magic Powder', 'Map', 'Mirror', 'Moon Pearl', 'Mushroom', 'Pendant', 'Quake', 'Shield', 'Shovel', 'Somaria', 'Tunic'];
+    if (substr($url_to_test, 0, 8) != 'https://') {
+        return false;
+    }
+    $hash_array = explode('/', $hash_to_test, 5);
+    if (count($hash_array) != 5) {
+        return false;
+    }
+    for ($i=0; $i < count($hash_array); $i++) {
+        if (!in_array($hash_array[$i], $valid_hashes)) {
+            return false;
+        }
+    }
+    return true;
 }
 function alttprParseInfoBot($s) {
     $sArray = explode(' - ', $s, 3);

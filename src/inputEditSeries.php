@@ -8,44 +8,26 @@ echo '            <tr><th>Date (UTC)</th><th>Mode</th><th>Description</th><th>Ra
 $memberArray = explode(', ', $series_members);
 $rowCounter = 0;
 foreach($memberArray as $raceID) {
-    $raceID = intval($raceID);
+    $race_id = intval($raceID);
+    require ('../includes/race_info.php');
     $rowCounter++;
     if($rowCounter % 2 == 0) {
         $startOfRow = '                <tr class="even">';
     } else {
         $startOfRow = '                <tr class="odd">';
     }
-    $stmt = $pdo->prepare("SELECT * FROM races WHERE id = :id");
-    $stmt->bindValue(':id', $raceID, PDO::PARAM_INT);
-    $stmt->execute();
-    $row = $stmt->fetch();
-    $raceSlug = $row['raceSlug'];
-    $raceStart = $row['raceStart'];
-    $raceMode = $row['raceMode'];
-    $raceSeed = $row['raceSeed'];
-    $raceHash = $row['raceHash'];
-    if(strlen($row['raceDescription']) > 63) { $raceDescription = substr($row['raceDescription'], 0, 60) . '...'; } else { $raceDescription = $row['raceDescription']; }
-    $raceIsTeam = $row['raceIsTeam'];
-    $raceIsSpoiler = $row['raceIsSpoiler'];
-    $raceSpoilerLink = $row['raceSpoilerLink'];
-    $raceFromRacetime = $row['raceFromRacetime'];
-    if($raceIsSpoiler == 'y') {
-        if($raceDescription == '') {
-            $raceDescription = '<a target="_blank" href="' . $raceSpoilerLink . '">Link to Spoiler</a>';
-        } else {
-            $raceDescription = $raceDescription . ' - <a target="_blank" href="' . $raceSpoilerLink . '">Link to Spoiler</a>';
-        }
+    echo $startOfRow . '<td>' . $race_date . '</td><td>' . $race_mode . '</td><td>' . $race_description_short . '</td><td>';
+    if ($race_from_racetime == 'y' ) {
+        echo '<a target="_blank" href="https://racetime.gg/' . $race_slug . '">';
+        echo $short_slug;
+    } else {
+        echo $race_slug;
     }
-    echo $startOfRow . '<td>' . $raceStart . '</td><td>' . $raceMode . '</td><td>' . $raceDescription . '</td><td>';
-    if ($raceFromRacetime == 'y' ) {
-        echo '<a target="_blank" href="https://racetime.gg/alttpr/' . $raceSlug . '">';
-    }
-    echo $raceSlug;
-    if ($raceFromRacetime == 'y') {
+    if ($race_from_racetime == 'y') {
         echo '</a>';
     }
-    echo '</td><td>' . hashToImages($raceHash) . '</td>';
-    echo '<td><input type="checkbox" form="editSeries" id="seed_' . $raceID . '" name="seed_' . $raceID . '" /><label for="seed_' . $raceID . '"> Check To Delete</label></td>';
+    echo '</td><td>' . hashToImages($race_hash) . '</td>';
+    echo '<td><input type="checkbox" form="editSeries" id="seed_' . $race_id . '" name="seed_' . $race_id . '" /><label for="seed_' . $race_id . '"> Check To Delete</label></td>';
     echo '</tr>' . PHP_EOL;        
 }
 echo '            </tbody>' . PHP_EOL;

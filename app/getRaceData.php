@@ -24,7 +24,7 @@ for($i=1;$i<=5;$i++) {
     $url_json = json_decode($url_data, true);
     $num_races = count($url_json['races']);
     for($j=0;$j<$num_races;$j++) {
-        $race_name = substr($url_json['races'][$j]['name'], 7);
+        $race_name = $url_json['races'][$j]['name'];
         array_unshift($slug_list, $race_name);
     }
     unset($url); unset($url_data); unset($url_json);
@@ -32,7 +32,7 @@ for($i=1;$i<=5;$i++) {
 array_pop($slug_list);
 $slug_count = count($slug_list);
 for($i=0;$i<$slug_count;$i++) {
-    $race_slug = 'alttpr/' . $slug_list[$i];
+    $race_slug = $slug_list[$i];
     $url = 'https://racetime.gg/' . $race_slug . '/data';
     $url_data = curlData($url);
     $url_json = json_decode($url_data, true);
@@ -127,7 +127,7 @@ for($i=1;$i<=5;$i++) {
     $url_json = json_decode($url_data, true);
     $num_races = count($url_json['races']);
     for($j=0;$j<$num_races;$j++) {
-        $race_name = substr($url_json['races'][$j]['name'], 7);
+        $race_name = $url_json['races'][$j]['name'];
         array_unshift($slug_list, $race_name);
     }
     unset($url); unset($url_data); unset($url_json);
@@ -135,7 +135,7 @@ for($i=1;$i<=5;$i++) {
 array_pop($slug_list);
 $slug_count = count($slug_list);
 for($i=0;$i<$slug_count;$i++) {
-    $race_slug = 'alttpr-ladder/' . $slug_list[$i];
+    $race_slug = $slug_list[$i];
     $url = 'https://racetime.gg/' . $race_slug . '/data';
     $url_data = curlData($url);
     $url_json = json_decode($url_data, true);
